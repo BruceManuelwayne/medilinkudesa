@@ -326,35 +326,116 @@ export default function MediLinkLanding() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nombre completo</Label>
-                    <Input
-                      id="name"
-                      placeholder="Ej: María González"
-                      value={caregiverData.name}
-                      onChange={(e) => setCaregiverData({ ...caregiverData, name: e.target.value })}
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nombre completo</Label>
+                      <Input
+                        id="name"
+                        placeholder="Ej: María González"
+                        value={caregiverData.name}
+                        onChange={(e) => setCaregiverData({ ...caregiverData, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="dni">DNI / ID</Label>
+                      <Input
+                        id="dni"
+                        placeholder="12.345.678"
+                        value={caregiverData.dni}
+                        onChange={(e) => setCaregiverData({ ...caregiverData, dni: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="maria@email.com"
+                        value={caregiverData.email}
+                        onChange={(e) => setCaregiverData({ ...caregiverData, email: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Teléfono</Label>
+                      <Input
+                        id="phone"
+                        placeholder="+54 11 1234-5678"
+                        value={caregiverData.phone}
+                        onChange={(e) => setCaregiverData({ ...caregiverData, phone: e.target.value })}
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="address">Dirección</Label>
                     <Input
-                      id="email"
-                      type="email"
-                      placeholder="maria@email.com"
-                      value={caregiverData.email}
-                      onChange={(e) => setCaregiverData({ ...caregiverData, email: e.target.value })}
+                      id="address"
+                      placeholder="Av. Corrientes 1234, CABA"
+                      value={caregiverData.address}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, address: e.target.value })}
                     />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="birthDate">Fecha de nacimiento</Label>
+                      <Input
+                        id="birthDate"
+                        type="date"
+                        value={caregiverData.birthDate}
+                        onChange={(e) => setCaregiverData({ ...caregiverData, birthDate: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="obra-social">Obra Social / Prepaga</Label>
+                      <Select
+                        value={caregiverData.obraSocial}
+                        onValueChange={(value) => setCaregiverData({ ...caregiverData, obraSocial: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona tu obra social" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="osde">OSDE</SelectItem>
+                          <SelectItem value="swiss">Swiss Medical</SelectItem>
+                          <SelectItem value="galeno">Galeno</SelectItem>
+                          <SelectItem value="pami">PAMI</SelectItem>
+                          <SelectItem value="ioma">IOMA</SelectItem>
+                          <SelectItem value="otra">Otra</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Teléfono</Label>
+                    <Label htmlFor="obraSocialCategory">Categoría de Obra Social</Label>
                     <Input
-                      id="phone"
-                      placeholder="+54 11 1234-5678"
-                      value={caregiverData.phone}
-                      onChange={(e) => setCaregiverData({ ...caregiverData, phone: e.target.value })}
+                      id="obraSocialCategory"
+                      placeholder="Ej: Plan 210, Básico, Premium"
+                      value={caregiverData.obraSocialCategory}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, obraSocialCategory: e.target.value })}
                     />
                   </div>
-                  <Button className="w-full" onClick={() => setCaregiverStep(2)}>
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      const mainProfile = {
+                        id: "main-profile",
+                        name: caregiverData.name || "Usuario Principal",
+                        age: caregiverData.birthDate
+                          ? new Date().getFullYear() - new Date(caregiverData.birthDate).getFullYear()
+                          : 0,
+                        obraSocial: caregiverData.obraSocial || "No especificada",
+                        obraSocialCategory: caregiverData.obraSocialCategory || "No especificada",
+                        dni: caregiverData.dni || "No especificado",
+                        address: caregiverData.address || "No especificada",
+                        birthDate: caregiverData.birthDate || "No especificada",
+                        relationship: "Titular",
+                        prescriptions: [],
+                      }
+                      setProfiles([mainProfile])
+                      setCaregiverStep(2) // Skip old step 2, go directly to family profiles
+                    }}
+                  >
                     Continuar <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
@@ -362,54 +443,6 @@ export default function MediLinkLanding() {
             )}
 
             {caregiverStep === 2 && (
-              <Card className="p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Completa tu perfil</CardTitle>
-                  <CardDescription>Esta información nos ayuda a brindarte el mejor servicio</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="age">Edad</Label>
-                    <Input
-                      id="age"
-                      type="number"
-                      placeholder="45"
-                      value={caregiverData.age}
-                      onChange={(e) => setCaregiverData({ ...caregiverData, age: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="obra-social">Obra Social / Prepaga</Label>
-                    <Select
-                      value={caregiverData.obraSocial}
-                      onValueChange={(value) => setCaregiverData({ ...caregiverData, obraSocial: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona tu obra social" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="osde">OSDE</SelectItem>
-                        <SelectItem value="swiss">Swiss Medical</SelectItem>
-                        <SelectItem value="galeno">Galeno</SelectItem>
-                        <SelectItem value="pami">PAMI</SelectItem>
-                        <SelectItem value="ioma">IOMA</SelectItem>
-                        <SelectItem value="otra">Otra</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setCaregiverStep(1)} className="flex-1">
-                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
-                    </Button>
-                    <Button className="flex-1" onClick={() => setCaregiverStep(3)}>
-                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {caregiverStep === 3 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">Agrega perfiles familiares</CardTitle>
@@ -441,7 +474,7 @@ export default function MediLinkLanding() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="profile-name">Nombre</Label>
+                          <Label htmlFor="profile-name">Nombre completo</Label>
                           <Input
                             id="profile-name"
                             placeholder="Ej: Roberto González"
@@ -450,17 +483,34 @@ export default function MediLinkLanding() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="profile-age">Edad</Label>
+                          <Label htmlFor="profile-dni">DNI / ID</Label>
                           <Input
-                            id="profile-age"
-                            type="number"
-                            placeholder="72"
-                            value={newProfile.age}
-                            onChange={(e) => setNewProfile({ ...newProfile, age: e.target.value })}
+                            id="profile-dni"
+                            placeholder="12.345.678"
+                            value={newProfile.dni}
+                            onChange={(e) => setNewProfile({ ...newProfile, dni: e.target.value })}
                           />
                         </div>
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="profile-address">Dirección</Label>
+                        <Input
+                          id="profile-address"
+                          placeholder="Av. Corrientes 1234, CABA"
+                          value={newProfile.address}
+                          onChange={(e) => setNewProfile({ ...newProfile, address: e.target.value })}
+                        />
+                      </div>
                       <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-birthDate">Fecha de nacimiento</Label>
+                          <Input
+                            id="profile-birthDate"
+                            type="date"
+                            value={newProfile.birthDate}
+                            onChange={(e) => setNewProfile({ ...newProfile, birthDate: e.target.value })}
+                          />
+                        </div>
                         <div className="space-y-2">
                           <Label htmlFor="profile-relationship">Parentesco</Label>
                           <Select
@@ -480,8 +530,10 @@ export default function MediLinkLanding() {
                             </SelectContent>
                           </Select>
                         </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="profile-obra-social">Obra Social</Label>
+                          <Label htmlFor="profile-obra-social">Obra Social / Prepaga</Label>
                           <Select
                             value={newProfile.obraSocial}
                             onValueChange={(value) => setNewProfile({ ...newProfile, obraSocial: value })}
@@ -494,26 +546,53 @@ export default function MediLinkLanding() {
                               <SelectItem value="osde">OSDE</SelectItem>
                               <SelectItem value="swiss">Swiss Medical</SelectItem>
                               <SelectItem value="ioma">IOMA</SelectItem>
+                              <SelectItem value="otra">Otra</SelectItem>
                             </SelectContent>
                           </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-obra-social-category">Categoría de Obra Social</Label>
+                          <Input
+                            id="profile-obra-social-category"
+                            placeholder="Ej: Plan 210, Básico"
+                            value={newProfile.obraSocialCategory}
+                            onChange={(e) => setNewProfile({ ...newProfile, obraSocialCategory: e.target.value })}
+                          />
                         </div>
                       </div>
                       <Button
                         variant="outline"
                         className="w-full bg-transparent"
                         onClick={() => {
+                          const calculatedAge = newProfile.birthDate
+                            ? new Date().getFullYear() - new Date(newProfile.birthDate).getFullYear()
+                            : 0
+
                           setProfiles([
                             ...profiles,
                             {
                               id: Date.now().toString(),
                               name: newProfile.name || "Perfil sin nombre",
-                              age: Number.parseInt(newProfile.age) || 0,
+                              age: calculatedAge,
                               obraSocial: newProfile.obraSocial || "No especificada",
+                              obraSocialCategory: newProfile.obraSocialCategory || "No especificada",
+                              dni: newProfile.dni || "No especificado",
+                              address: newProfile.address || "No especificada",
+                              birthDate: newProfile.birthDate || "No especificada",
                               relationship: newProfile.relationship || "Familiar",
                               prescriptions: [],
                             },
                           ])
-                          setNewProfile({ name: "", age: "", obraSocial: "", relationship: "" })
+                          setNewProfile({
+                            name: "",
+                            age: "",
+                            obraSocial: "",
+                            obraSocialCategory: "",
+                            dni: "",
+                            address: "",
+                            birthDate: "",
+                            relationship: "",
+                          })
                         }}
                       >
                         <Plus className="w-4 h-4 mr-2" /> Agregar Perfil
@@ -522,7 +601,7 @@ export default function MediLinkLanding() {
                   </div>
 
                   <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setCaregiverStep(2)} className="flex-1">
+                    <Button variant="outline" onClick={() => setCaregiverStep(1)} className="flex-1">
                       <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
                     <Button
@@ -534,7 +613,7 @@ export default function MediLinkLanding() {
                           updatedProfiles[0].prescriptions = samplePrescriptions
                           setProfiles(updatedProfiles)
                         }
-                        setCaregiverStep(4)
+                        setCaregiverStep(3) // Updated step number since we removed step 2
                       }}
                     >
                       Continuar <ArrowRight className="w-4 h-4 ml-2" />
@@ -544,7 +623,7 @@ export default function MediLinkLanding() {
               </Card>
             )}
 
-            {caregiverStep === 4 && (
+            {caregiverStep === 3 && (
               <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">Escanea las recetas médicas</CardTitle>
@@ -628,10 +707,10 @@ export default function MediLinkLanding() {
                   )}
 
                   <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setCaregiverStep(3)} className="flex-1">
+                    <Button variant="outline" onClick={() => setCaregiverStep(2)} className="flex-1">
                       <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
-                    <Button className="flex-1" onClick={() => setCaregiverStep(5)}>
+                    <Button className="flex-1" onClick={() => setCaregiverStep(4)}>
                       Buscar Farmacias <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </div>
@@ -639,7 +718,7 @@ export default function MediLinkLanding() {
               </Card>
             )}
 
-            {caregiverStep === 5 && (
+            {caregiverStep === 4 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">Farmacias cercanas</CardTitle>
@@ -694,7 +773,7 @@ export default function MediLinkLanding() {
                   </div>
 
                   <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setCaregiverStep(4)} className="flex-1">
+                    <Button variant="outline" onClick={() => setCaregiverStep(3)} className="flex-1">
                       <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
                   </div>
@@ -702,7 +781,7 @@ export default function MediLinkLanding() {
               </Card>
             )}
 
-            {caregiverStep === 6 && (
+            {caregiverStep === 5 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">
