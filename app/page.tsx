@@ -1012,7 +1012,7 @@ export default function MediLinkLanding() {
                   {orderConfirmed && (
                     <div className="text-center p-6 bg-secondary/10 rounded-lg">
                       <CheckCircle className="w-16 h-16 text-secondary mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Pedido #ML-2024-001</h3>
+                      <h3 className="text-lg font-semibold mb-2">Pedido #MD-2024-001</h3>
                       <p className="text-muted-foreground">Farmacia San Juan preparará tu medicamento</p>
                     </div>
                   )}
