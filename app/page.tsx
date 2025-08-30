@@ -37,6 +37,9 @@ import {
   Package,
   Eye,
   TrendingUp,
+  Globe,
+  Puzzle,
+  X,
 } from "lucide-react"
 
 interface Profile {
@@ -85,6 +88,15 @@ export default function MediLinkLanding() {
     email: "",
     license: "",
     pharmacist: "",
+  })
+
+  const [selectedWeek, setSelectedWeek] = useState("2024-01-15")
+  const [orderStatuses, setOrderStatuses] = useState<{ [key: string]: string }>({
+    "ORD-001": "ready",
+    "ORD-002": "validating",
+    "ORD-003": "stock",
+    "ORD-004": "ready",
+    "ORD-005": "validating",
   })
 
   const [uploadedPrescription, setUploadedPrescription] = useState<string | null>(null)
@@ -183,6 +195,76 @@ export default function MediLinkLanding() {
     { medication: "Metformina 850mg", stock: 78, minStock: 30, price: 980, status: "good" },
     { medication: "Omeprazol 20mg", stock: 5, minStock: 25, price: 1250, status: "critical" },
   ]
+
+  const sampleWeeklyOrders = [
+    {
+      id: "ORD-001",
+      patient: "María González",
+      medication: "Atorvastatina 20mg",
+      quantity: "30 comp.",
+      validatedOnline: true,
+      paidOnline: true,
+      pickupTime: "10:30",
+      pickupDate: "2024-01-15",
+      obraSocial: "OSDE",
+      status: "ready",
+    },
+    {
+      id: "ORD-002",
+      patient: "Roberto Fernández",
+      medication: "Losartán 50mg",
+      quantity: "60 comp.",
+      validatedOnline: false,
+      paidOnline: false,
+      pickupTime: "14:15",
+      pickupDate: "2024-01-15",
+      obraSocial: "PAMI",
+      status: "validating",
+    },
+    {
+      id: "ORD-003",
+      patient: "Ana López",
+      medication: "Metformina 850mg",
+      quantity: "90 comp.",
+      validatedOnline: true,
+      paidOnline: true,
+      pickupTime: "16:45",
+      pickupDate: "2024-01-16",
+      obraSocial: "Swiss Medical",
+      status: "stock",
+    },
+    {
+      id: "ORD-004",
+      patient: "Carlos Ruiz",
+      medication: "Omeprazol 20mg",
+      quantity: "28 comp.",
+      validatedOnline: true,
+      paidOnline: false,
+      pickupTime: "09:30",
+      pickupDate: "2024-01-17",
+      obraSocial: "OSDE",
+      status: "ready",
+    },
+    {
+      id: "ORD-005",
+      patient: "Elena Morales",
+      medication: "Ibuprofeno 600mg",
+      quantity: "20 comp.",
+      validatedOnline: false,
+      paidOnline: true,
+      pickupTime: "11:00",
+      pickupDate: "2024-01-18",
+      obraSocial: "PAMI",
+      status: "validating",
+    },
+  ]
+
+  const updateOrderStatus = (orderId: string, newStatus: string) => {
+    setOrderStatuses((prev) => ({
+      ...prev,
+      [orderId]: newStatus,
+    }))
+  }
 
   if (demoMode === "caregiver-demo") {
     return (
@@ -827,69 +909,95 @@ export default function MediLinkLanding() {
             {pharmacyStep === 1 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Registra tu farmacia en MediLink</CardTitle>
-                  <CardDescription>Únete a la red de farmacias digitales más grande de Argentina</CardDescription>
+                  <CardTitle className="text-2xl">Únete a MediLink</CardTitle>
+                  <CardDescription>
+                    Plataforma integral que genera tu sitio web y se integra con tu farmacia existente
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="pharmacy-name">Nombre de la farmacia</Label>
-                    <Input
-                      id="pharmacy-name"
-                      placeholder="Ej: Farmacia San Juan"
-                      value={pharmacyData.name}
-                      onChange={(e) => setPharmacyData({ ...pharmacyData, name: e.target.value })}
-                    />
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div className="p-4 border-2 border-dashed border-secondary/20 rounded-lg bg-secondary/5 text-center">
+                      <Globe className="w-12 h-12 text-secondary mx-auto mb-3" />
+                      <h4 className="font-semibold mb-2">¿No tienes sitio web?</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Generamos un sitio web completo para tu farmacia
+                      </p>
+                      <Badge variant="secondary" className="text-xs">
+                        Sitio web incluido
+                      </Badge>
+                    </div>
+                    <div className="p-4 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5 text-center">
+                      <Puzzle className="w-12 h-12 text-primary mx-auto mb-3" />
+                      <h4 className="font-semibold mb-2">¿Ya tienes sitio web?</h4>
+                      <p className="text-sm text-muted-foreground mb-3">Plugin que se integra con tu sitio existente</p>
+                      <Badge variant="default" className="text-xs">
+                        Plugin WordPress/Shopify
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="pharmacy-address">Dirección completa</Label>
-                    <Input
-                      id="pharmacy-address"
-                      placeholder="Av. Corrientes 1234, CABA"
-                      value={pharmacyData.address}
-                      onChange={(e) => setPharmacyData({ ...pharmacyData, address: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+
+                  <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="pharmacy-phone">Teléfono</Label>
+                      <Label htmlFor="pharmacy-name">Nombre de la farmacia</Label>
                       <Input
-                        id="pharmacy-phone"
-                        placeholder="+54 11 1234-5678"
-                        value={pharmacyData.phone}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, phone: e.target.value })}
+                        id="pharmacy-name"
+                        placeholder="Ej: Farmacia San Juan"
+                        value={pharmacyData.name}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, name: e.target.value })}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="pharmacy-email">Email</Label>
+                      <Label htmlFor="pharmacy-address">Dirección completa</Label>
                       <Input
-                        id="pharmacy-email"
-                        type="email"
-                        placeholder="farmacia@email.com"
-                        value={pharmacyData.email}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, email: e.target.value })}
+                        id="pharmacy-address"
+                        placeholder="Av. Corrientes 1234, CABA"
+                        value={pharmacyData.address}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, address: e.target.value })}
                       />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="pharmacy-phone">Teléfono</Label>
+                        <Input
+                          id="pharmacy-phone"
+                          placeholder="+54 11 1234-5678"
+                          value={pharmacyData.phone}
+                          onChange={(e) => setPharmacyData({ ...pharmacyData, phone: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="pharmacy-email">Email</Label>
+                        <Input
+                          id="pharmacy-email"
+                          type="email"
+                          placeholder="farmacia@email.com"
+                          value={pharmacyData.email}
+                          onChange={(e) => setPharmacyData({ ...pharmacyData, email: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="pharmacy-license">Matrícula farmacia</Label>
+                        <Input
+                          id="pharmacy-license"
+                          placeholder="12345"
+                          value={pharmacyData.license}
+                          onChange={(e) => setPharmacyData({ ...pharmacyData, license: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="pharmacist-name">Farmacéutico responsable</Label>
+                        <Input
+                          id="pharmacist-name"
+                          placeholder="Dr. Juan Pérez"
+                          value={pharmacyData.pharmacist}
+                          onChange={(e) => setPharmacyData({ ...pharmacyData, pharmacist: e.target.value })}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="pharmacy-license">Matrícula farmacia</Label>
-                      <Input
-                        id="pharmacy-license"
-                        placeholder="12345"
-                        value={pharmacyData.license}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, license: e.target.value })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="pharmacist-name">Farmacéutico responsable</Label>
-                      <Input
-                        id="pharmacist-name"
-                        placeholder="Dr. Juan Pérez"
-                        value={pharmacyData.pharmacist}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, pharmacist: e.target.value })}
-                      />
-                    </div>
-                  </div>
+
                   <Button
                     className="w-full"
                     onClick={() => setPharmacyStep(2)}
@@ -967,51 +1075,114 @@ export default function MediLinkLanding() {
             {pharmacyStep === 3 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Dashboard de gestión</CardTitle>
-                  <CardDescription>Controla todas las operaciones de tu farmacia desde un solo lugar</CardDescription>
+                  <CardTitle className="text-2xl">Vista semanal de pedidos</CardTitle>
+                  <CardDescription>Gestiona todos los pedidos de la semana con control de estado</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Stats Cards */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-secondary/10 rounded-lg text-center">
-                      <div className="text-2xl font-bold text-secondary">24</div>
-                      <div className="text-sm text-muted-foreground">Pedidos hoy</div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="space-y-1">
+                      <Label htmlFor="week-selector">Semana seleccionada:</Label>
+                      <select
+                        id="week-selector"
+                        className="px-3 py-2 border rounded-md bg-background"
+                        value={selectedWeek}
+                        onChange={(e) => setSelectedWeek(e.target.value)}
+                      >
+                        <option value="2024-01-15">15-21 Enero 2024</option>
+                        <option value="2024-01-08">8-14 Enero 2024</option>
+                        <option value="2024-01-22">22-28 Enero 2024</option>
+                      </select>
                     </div>
-                    <div className="p-4 bg-primary/10 rounded-lg text-center">
-                      <div className="text-2xl font-bold text-primary">$48,750</div>
-                      <div className="text-sm text-muted-foreground">Ventas del día</div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-secondary">5</div>
+                      <div className="text-sm text-muted-foreground">Pedidos esta semana</div>
                     </div>
                   </div>
 
-                  {/* Recent Orders */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Pedidos recientes:</h4>
-                    {samplePrescriptionRequests.map((request) => (
-                      <div key={request.id} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <div>
-                            <h5 className="font-medium">{request.patient}</h5>
-                            <p className="text-sm text-muted-foreground">
-                              {request.medication} • {request.quantity}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <Badge variant={request.status === "approved" ? "default" : "secondary"} className="mb-1">
-                              {request.status === "approved" ? "Aprobado" : "Pendiente"}
-                            </Badge>
-                            <p className="text-xs text-muted-foreground">{request.time}</p>
-                          </div>
+                  {/* Weekly Orders Table */}
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-7 gap-2 text-xs font-medium text-muted-foreground border-b pb-2">
+                      <span>Pedido</span>
+                      <span>Paciente</span>
+                      <span>Validado</span>
+                      <span>Pagado</span>
+                      <span>Retiro</span>
+                      <span>Estado</span>
+                      <span>Acciones</span>
+                    </div>
+
+                    {sampleWeeklyOrders.map((order) => (
+                      <div
+                        key={order.id}
+                        className="grid grid-cols-7 gap-2 items-center p-3 border rounded-lg hover:bg-muted/50"
+                      >
+                        <div className="text-sm font-medium">{order.id}</div>
+                        <div className="text-sm">
+                          <div className="font-medium">{order.patient}</div>
+                          <div className="text-xs text-muted-foreground">{order.medication}</div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground">{request.obraSocial}</span>
-                          {request.status === "pending" && (
-                            <Button size="sm" variant="outline" className="bg-transparent">
-                              <Eye className="w-3 h-3 mr-1" /> Revisar
-                            </Button>
+                        <div className="text-center">
+                          {order.validatedOnline ? (
+                            <CheckCircle className="w-4 h-4 text-secondary mx-auto" />
+                          ) : (
+                            <X className="w-4 h-4 text-muted-foreground mx-auto" />
                           )}
+                        </div>
+                        <div className="text-center">
+                          {order.paidOnline ? (
+                            <CheckCircle className="w-4 h-4 text-primary mx-auto" />
+                          ) : (
+                            <X className="w-4 h-4 text-muted-foreground mx-auto" />
+                          )}
+                        </div>
+                        <div className="text-xs">
+                          <div>
+                            {order.pickupDate.split("-")[2]}/{order.pickupDate.split("-")[1]}
+                          </div>
+                          <div className="text-muted-foreground">{order.pickupTime}</div>
+                        </div>
+                        <div>
+                          <select
+                            className="text-xs px-2 py-1 border rounded bg-background"
+                            value={orderStatuses[order.id] || order.status}
+                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                          >
+                            <option value="validating">Validando</option>
+                            <option value="stock">Buscando stock</option>
+                            <option value="ready">Listo para retiro</option>
+                            <option value="completed">Completado</option>
+                          </select>
+                        </div>
+                        <div>
+                          <Button size="sm" variant="outline" className="text-xs px-2 py-1 h-auto bg-transparent">
+                            <Eye className="w-3 h-3" />
+                          </Button>
                         </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Status Legend */}
+                  <div className="p-4 bg-muted/30 rounded-lg">
+                    <h4 className="font-semibold mb-3 text-sm">Estados de pedidos:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <span>Validando: Esperando validación farmacéutica</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <span>Buscando stock: Verificando disponibilidad</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-secondary rounded-full"></div>
+                        <span>Listo para retiro: Medicamento preparado</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-primary rounded-full"></div>
+                        <span>Completado: Pedido entregado</span>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex space-x-2">
