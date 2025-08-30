@@ -1816,8 +1816,8 @@ export default function MediLinkLanding() {
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <div className="order-2 lg:order-1 relative">
                     <img
-                      src="/map-interface-showing-nearby-pharmacies-with-medic.png"
-                      alt="Mapa con farmacias cercanas"
+                      src="/google-maps-pharmacies-buenos-aires.jpeg"
+                      alt="Mapa con farmacias cercanas en Buenos Aires"
                       className="rounded-2xl shadow-2xl"
                     />
                   </div>
