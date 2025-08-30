@@ -696,7 +696,13 @@ export default function MediLinkLanding() {
                     <div className="space-y-3">
                       <h4 className="font-semibold">Recetas escaneadas:</h4>
                       {profiles[0].prescriptions.map((prescription) => (
-                        <div key={prescription.id} className="p-4 border rounded-lg">
+                        <div
+                          key={prescription.id}
+                          className="p-4 border rounded-lg cursor-pointer hover:bg-muted/50 hover:border-primary/50 transition-all duration-200"
+                          onClick={() => {
+                            setCaregiverStep(4)
+                          }}
+                        >
                           <div className="flex items-start justify-between">
                             <div>
                               <h5 className="font-medium">{prescription.medication}</h5>
