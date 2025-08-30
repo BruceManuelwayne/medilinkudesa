@@ -1114,7 +1114,7 @@ export default function MediLinkLanding() {
                     {sampleWeeklyOrders.map((order) => (
                       <div
                         key={order.id}
-                        className="grid grid-cols-7 gap-2 items-center p-3 border rounded-lg hover:bg-muted/50"
+                        className="grid grid-cols-7 gap-2 items-center p-3 border rounded-lg bg-muted/10 hover:bg-muted/20"
                       >
                         <div className="text-sm font-medium">{order.id}</div>
                         <div className="text-sm">
