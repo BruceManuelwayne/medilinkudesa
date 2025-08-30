@@ -93,6 +93,8 @@ export default function MediLinkLanding() {
   const [pickupDay, setPickupDay] = useState("")
   const [pickupTime, setPickupTime] = useState("")
 
+  const [orderConfirmed, setOrderConfirmed] = useState(false)
+
   const handlePrescriptionUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file && file.type.startsWith("image/")) {
@@ -638,15 +640,23 @@ export default function MediLinkLanding() {
             {caregiverStep === 6 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">¡Pedido confirmado!</CardTitle>
-                  <CardDescription>Tu medicamento será preparado bajo supervisión farmacéutica</CardDescription>
+                  <CardTitle className="text-2xl">
+                    {orderConfirmed ? "¡Pedido confirmado!" : "Confirmar Pedido"}
+                  </CardTitle>
+                  <CardDescription>
+                    {orderConfirmed
+                      ? "Tu medicamento será preparado bajo supervisión farmacéutica"
+                      : "Revisa los detalles de tu pedido antes de confirmar"}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="text-center p-6 bg-secondary/10 rounded-lg">
-                    <CheckCircle className="w-16 h-16 text-secondary mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Pedido #ML-2024-001</h3>
-                    <p className="text-muted-foreground">Farmacia San Juan preparará tu medicamento</p>
-                  </div>
+                  {orderConfirmed && (
+                    <div className="text-center p-6 bg-secondary/10 rounded-lg">
+                      <CheckCircle className="w-16 h-16 text-secondary mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Pedido #ML-2024-001</h3>
+                      <p className="text-muted-foreground">Farmacia San Juan preparará tu medicamento</p>
+                    </div>
+                  )}
 
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
@@ -724,23 +734,35 @@ export default function MediLinkLanding() {
                     )}
                   </div>
 
-                  <div className="p-4 border-l-4 border-primary bg-primary/5">
-                    <h4 className="font-semibold mb-2">Próximos pasos:</h4>
-                    <ul className="text-sm space-y-1 text-muted-foreground">
-                      <li>• El farmacéutico validará tu receta</li>
-                      <li>• Recibirás una notificación cuando esté listo</li>
-                      {paymentMethod === "online" && <li>• Procederás al pago online seguro</li>}
-                      {paymentMethod === "person" && <li>• Pagarás al momento del retiro</li>}
-                      {pickupDay && pickupTime && <li>• Retira en el horario programado</li>}
-                    </ul>
-                  </div>
+                  {orderConfirmed && (
+                    <div className="p-4 border-l-4 border-primary bg-primary/5">
+                      <h4 className="font-semibold mb-2">Próximos pasos:</h4>
+                      <ul className="text-sm space-y-1 text-muted-foreground">
+                        <li>• El farmacéutico validará tu receta</li>
+                        <li>• Recibirás una notificación cuando esté listo</li>
+                        {paymentMethod === "online" && <li>• Procederás al pago online seguro</li>}
+                        {paymentMethod === "person" && <li>• Pagarás al momento del retiro</li>}
+                        {pickupDay && pickupTime && <li>• Retira en el horario programado</li>}
+                      </ul>
+                    </div>
+                  )}
 
                   <div className="flex space-x-2">
                     <Button variant="outline" onClick={backToLanding} className="flex-1 bg-transparent">
                       Volver al Inicio
                     </Button>
-                    <Button className="flex-1" onClick={() => setCaregiverStep(1)}>
-                      Reiniciar Demo
+                    <Button
+                      className="flex-1"
+                      onClick={() => {
+                        if (orderConfirmed) {
+                          setCaregiverStep(1)
+                          setOrderConfirmed(false)
+                        } else {
+                          setOrderConfirmed(true)
+                        }
+                      }}
+                    >
+                      {orderConfirmed ? "Reiniciar Demo" : "Confirmar Pedido"}
                     </Button>
                   </div>
                 </CardContent>
