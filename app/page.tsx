@@ -1805,7 +1805,7 @@ export default function MediLinkLanding() {
                   </div>
                   <div className="relative">
                     <img
-                      src="/smartphone-showing-prescription-scanning-app-inter.png"
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Generated%20Image%20August%2030%2C%202025%20-%208_19PM-0367tplHWA4W514Tb2ENmGe7BXI4y0.jpeg"
                       alt="App escaneando receta médica"
                       className="rounded-2xl shadow-2xl"
                     />
