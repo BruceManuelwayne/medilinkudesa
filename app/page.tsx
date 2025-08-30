@@ -787,6 +787,14 @@ export default function MediLinkLanding() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  <div className="w-full rounded-lg overflow-hidden border">
+                    <img
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/descarga-G0grz2ho6O6UcCIh7jILBDJYenfIjd.jpeg"
+                      alt="Mapa de Google mostrando farmacias cercanas en Buenos Aires"
+                      className="w-full h-64 object-cover"
+                    />
+                  </div>
+
                   <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
                     <Search className="w-5 h-5 text-muted-foreground" />
                     <span className="text-sm">
