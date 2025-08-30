@@ -40,6 +40,7 @@ import {
   Globe,
   Puzzle,
   X,
+  Banknote,
 } from "lucide-react"
 
 interface Profile {
@@ -112,6 +113,7 @@ export default function MediLinkLanding() {
   const [paymentMethod, setPaymentMethod] = useState("")
   const [pickupDay, setPickupDay] = useState("")
   const [pickupTime, setPickupTime] = useState("")
+  const [deliveryMethod, setDeliveryMethod] = useState("")
 
   const [orderConfirmed, setOrderConfirmed] = useState(false)
 
@@ -822,7 +824,7 @@ export default function MediLinkLanding() {
                         <Button
                           className="w-full"
                           variant={index === 0 ? "default" : "outline"}
-                          onClick={() => setCaregiverStep(6)}
+                          onClick={() => setCaregiverStep(5)}
                         >
                           {index === 0 ? "Seleccionar y Continuar" : "Seleccionar"}
                         </Button>
@@ -840,6 +842,161 @@ export default function MediLinkLanding() {
             )}
 
             {caregiverStep === 5 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Método de entrega</CardTitle>
+                  <CardDescription>Elige cómo quieres recibir tu medicamento</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Selecciona el método de entrega</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button
+                        variant={deliveryMethod === "delivery" ? "default" : "outline"}
+                        onClick={() => setDeliveryMethod("delivery")}
+                        className="h-auto p-6 flex flex-col items-center space-y-3"
+                      >
+                        <Truck className="w-8 h-8" />
+                        <div className="text-center">
+                          <div className="font-semibold">Envío a domicilio</div>
+                          <div className="text-sm text-muted-foreground">Recibe en tu casa</div>
+                        </div>
+                      </Button>
+                      <Button
+                        variant={deliveryMethod === "pickup" ? "default" : "outline"}
+                        onClick={() => setDeliveryMethod("pickup")}
+                        className="h-auto p-6 flex flex-col items-center space-y-3"
+                      >
+                        <MapPin className="w-8 h-8" />
+                        <div className="text-center">
+                          <div className="font-semibold">Retirar en farmacia</div>
+                          <div className="text-sm text-muted-foreground">Buscar en persona</div>
+                        </div>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {deliveryMethod === "delivery" && (
+                    <div className="p-4 border rounded-lg bg-muted/30">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">Costo de envío:</span>
+                        <span className="text-lg font-bold text-primary">$500</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Entrega en 2-4 horas en CABA y GBA</p>
+                    </div>
+                  )}
+
+                  {deliveryMethod === "pickup" && (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Coordinar retiro</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Día de retiro</label>
+                          <select
+                            value={pickupDay}
+                            onChange={(e) => setPickupDay(e.target.value)}
+                            className="w-full p-3 border rounded-md bg-background"
+                          >
+                            <option value="">Seleccionar día</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="mañana">Mañana</option>
+                            <option value="pasado">Pasado mañana</option>
+                            <option value="lunes">Lunes</option>
+                            <option value="martes">Martes</option>
+                            <option value="miercoles">Miércoles</option>
+                            <option value="jueves">Jueves</option>
+                            <option value="viernes">Viernes</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Horario</label>
+                          <select
+                            value={pickupTime}
+                            onChange={(e) => setPickupTime(e.target.value)}
+                            className="w-full p-3 border rounded-md bg-background"
+                          >
+                            <option value="">Seleccionar horario</option>
+                            <option value="9-12">9:00 - 12:00</option>
+                            <option value="12-15">12:00 - 15:00</option>
+                            <option value="15-18">15:00 - 18:00</option>
+                            <option value="18-20">18:00 - 20:00</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {pickupDay && pickupTime && (
+                        <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+                          <p className="text-sm">
+                            <strong>Retiro programado:</strong>{" "}
+                            {pickupDay === "hoy"
+                              ? "Hoy"
+                              : pickupDay === "mañana"
+                                ? "Mañana"
+                                : pickupDay === "pasado"
+                                  ? "Pasado mañana"
+                                  : pickupDay.charAt(0).toUpperCase() + pickupDay.slice(1)}{" "}
+                            entre las {pickupTime.replace("-", ":00 - ")}:00
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Método de pago</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        variant={paymentMethod === "online" ? "default" : "outline"}
+                        onClick={() => setPaymentMethod("online")}
+                        className="h-auto p-4 flex flex-col items-center space-y-2"
+                      >
+                        <CreditCard className="w-6 h-6" />
+                        <span>Pago Online</span>
+                      </Button>
+                      <Button
+                        variant={paymentMethod === "person" ? "default" : "outline"}
+                        onClick={() => setPaymentMethod("person")}
+                        className="h-auto p-4 flex flex-col items-center space-y-2"
+                      >
+                        <Banknote className="w-6 h-6" />
+                        <span>Pagar en Persona</span>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border rounded-lg bg-muted/30">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">Subtotal medicamento:</span>
+                      <span>$2,450</span>
+                    </div>
+                    {deliveryMethod === "delivery" && (
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">Costo de envío:</span>
+                        <span>$500</span>
+                      </div>
+                    )}
+                    <hr className="my-2" />
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-lg">Total:</span>
+                      <span className="text-lg font-bold text-primary">
+                        ${deliveryMethod === "delivery" ? "2,950" : "2,450"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setCaregiverStep(4)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button className="flex-1" onClick={() => setCaregiverStep(6)}>
+                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 6 && (
               <Card className="p-8">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">
@@ -866,74 +1023,19 @@ export default function MediLinkLanding() {
                       <span>{profiles[0]?.prescriptions?.[0]?.medication}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                      <span className="font-medium">Precio final:</span>
-                      <span className="text-lg font-bold text-primary">$2,450</span>
+                      <span className="font-medium">Método de entrega:</span>
+                      <span>{deliveryMethod === "delivery" ? "Envío a domicilio" : "Retiro en farmacia"}</span>
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg">Método de Pago</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        variant={paymentMethod === "online" ? "default" : "outline"}
-                        onClick={() => setPaymentMethod("online")}
-                        className="h-auto p-4 flex flex-col items-center space-y-2"
-                      >
-                        <CreditCard className="w-6 h-6" />
-                        <span>Pago Online</span>
-                      </Button>
-                      <Button
-                        variant={paymentMethod === "person" ? "default" : "outline"}
-                        onClick={() => setPaymentMethod("person")}
-                        className="h-auto p-4 flex flex-col items-center space-y-2"
-                      >
-                        <MapPin className="w-6 h-6" />
-                        <span>Pagar en Persona</span>
-                      </Button>
+                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                      <span className="font-medium">Método de pago:</span>
+                      <span>{paymentMethod === "online" ? "Pago online" : "Pago en persona"}</span>
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg">Coordinar Entrega</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Día de Retiro</label>
-                        <select
-                          value={pickupDay}
-                          onChange={(e) => setPickupDay(e.target.value)}
-                          className="w-full p-2 border rounded-md bg-background"
-                        >
-                          <option value="">Seleccionar día</option>
-                          <option value="hoy">Hoy</option>
-                          <option value="mañana">Mañana</option>
-                          <option value="pasado">Pasado mañana</option>
-                        </select>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Horario</label>
-                        <select
-                          value={pickupTime}
-                          onChange={(e) => setPickupTime(e.target.value)}
-                          className="w-full p-2 border rounded-md bg-background"
-                        >
-                          <option value="">Seleccionar horario</option>
-                          <option value="9-12">9:00 - 12:00</option>
-                          <option value="12-15">12:00 - 15:00</option>
-                          <option value="15-18">15:00 - 18:00</option>
-                          <option value="18-20">18:00 - 20:00</option>
-                        </select>
-                      </div>
+                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                      <span className="font-medium">Total:</span>
+                      <span className="text-lg font-bold text-primary">
+                        ${deliveryMethod === "delivery" ? "2,950" : "2,450"}
+                      </span>
                     </div>
-
-                    {pickupDay && pickupTime && (
-                      <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
-                        <p className="text-sm">
-                          <strong>Retiro programado:</strong>{" "}
-                          {pickupDay === "hoy" ? "Hoy" : pickupDay === "mañana" ? "Mañana" : "Pasado mañana"} entre las{" "}
-                          {pickupTime.replace("-", ":00 - ")}:00
-                        </p>
-                      </div>
-                    )}
                   </div>
 
                   {orderConfirmed && (
@@ -944,14 +1046,17 @@ export default function MediLinkLanding() {
                         <li>• Recibirás una notificación cuando esté listo</li>
                         {paymentMethod === "online" && <li>• Procederás al pago online seguro</li>}
                         {paymentMethod === "person" && <li>• Pagarás al momento del retiro</li>}
-                        {pickupDay && pickupTime && <li>• Retira en el horario programado</li>}
+                        {deliveryMethod === "delivery" && <li>• Tu medicamento será enviado a domicilio</li>}
+                        {deliveryMethod === "pickup" && pickupDay && pickupTime && (
+                          <li>• Retira en el horario programado</li>
+                        )}
                       </ul>
                     </div>
                   )}
 
                   <div className="flex space-x-2">
-                    <Button variant="outline" onClick={backToLanding} className="flex-1 bg-transparent">
-                      Volver al Inicio
+                    <Button variant="outline" onClick={() => setCaregiverStep(5)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
                     <Button
                       className="flex-1"
@@ -959,6 +1064,10 @@ export default function MediLinkLanding() {
                         if (orderConfirmed) {
                           setCaregiverStep(1)
                           setOrderConfirmed(false)
+                          setDeliveryMethod("")
+                          setPaymentMethod("")
+                          setPickupDay("")
+                          setPickupTime("")
                         } else {
                           setOrderConfirmed(true)
                         }
