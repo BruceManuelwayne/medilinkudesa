@@ -115,6 +115,8 @@ export default function MediLinkLanding() {
 
   const [orderConfirmed, setOrderConfirmed] = useState(false)
 
+  const [selectedProfileForPrescription, setSelectedProfileForPrescription] = useState(0)
+
   const handlePrescriptionUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file && file.type.startsWith("image/")) {
@@ -636,15 +638,57 @@ export default function MediLinkLanding() {
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">Escanea las recetas médicas</CardTitle>
                   <CardDescription>
-                    Agrega las recetas de {profiles[0]?.name || "tu familiar"} para encontrar medicamentos
+                    Selecciona el perfil y agrega las recetas médicas para encontrar medicamentos
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Selecciona el perfil para la receta:</h4>
+                    <div className="grid gap-3">
+                      {profiles.map((profile, index) => (
+                        <div
+                          key={index}
+                          className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                            selectedProfileForPrescription === index
+                              ? "border-primary bg-primary/5"
+                              : "border-muted hover:border-primary/50 hover:bg-muted/30"
+                          }`}
+                          onClick={() => setSelectedProfileForPrescription(index)}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div
+                              className={`w-3 h-3 rounded-full ${
+                                selectedProfileForPrescription === index ? "bg-primary" : "bg-muted"
+                              }`}
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between">
+                                <h5 className="font-medium">{profile.name}</h5>
+                                {index === 0 && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    Principal
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="text-sm text-muted-foreground mt-1">
+                                <p>{profile.address}</p>
+                                <p>
+                                  Obra Social: {profile.obraSocial} - {profile.obraSocialCategory}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="border-2 border-dashed border-primary/20 rounded-lg p-8 text-center bg-primary/5">
                     <Camera className="w-12 h-12 text-primary mx-auto mb-4" />
                     <h4 className="font-semibold mb-2">Escanea tu receta</h4>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Usa la cámara para escanear automáticamente la receta médica
+                      Usa la cámara para escanear automáticamente la receta médica de{" "}
+                      {profiles[selectedProfileForPrescription]?.name}
                     </p>
 
                     <div className="space-y-3">
@@ -665,12 +709,9 @@ export default function MediLinkLanding() {
                       <Button
                         variant="outline"
                         onClick={() => {
-                          // Add sample prescriptions for demo without upload
-                          if (profiles.length > 0) {
-                            const updatedProfiles = [...profiles]
-                            updatedProfiles[0].prescriptions = samplePrescriptions
-                            setProfiles(updatedProfiles)
-                          }
+                          const updatedProfiles = [...profiles]
+                          updatedProfiles[selectedProfileForPrescription].prescriptions = samplePrescriptions
+                          setProfiles(updatedProfiles)
                         }}
                       >
                         <FileText className="w-4 h-4 mr-2" /> Conectar a Obra Social
@@ -692,33 +733,36 @@ export default function MediLinkLanding() {
                     <p className="text-xs text-muted-foreground">También puedes usar recetas de ejemplo para la demo</p>
                   </div>
 
-                  {profiles[0]?.prescriptions && profiles[0].prescriptions.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="font-semibold">Recetas escaneadas:</h4>
-                      {profiles[0].prescriptions.map((prescription) => (
-                        <div
-                          key={prescription.id}
-                          className="p-4 border rounded-lg cursor-pointer hover:bg-muted/50 hover:border-primary/50 transition-all duration-200"
-                          onClick={() => {
-                            setCaregiverStep(4)
-                          }}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h5 className="font-medium">{prescription.medication}</h5>
-                              <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
-                              <p className="text-xs text-muted-foreground">
-                                Dr. {prescription.doctor} • {prescription.date}
-                              </p>
+                  {profiles[selectedProfileForPrescription]?.prescriptions &&
+                    profiles[selectedProfileForPrescription].prescriptions.length > 0 && (
+                      <div className="space-y-3">
+                        <h4 className="font-semibold">
+                          Recetas escaneadas para {profiles[selectedProfileForPrescription].name}:
+                        </h4>
+                        {profiles[selectedProfileForPrescription].prescriptions.map((prescription) => (
+                          <div
+                            key={prescription.id}
+                            className="p-4 border rounded-lg cursor-pointer hover:bg-muted/50 hover:border-primary/50 transition-all duration-200"
+                            onClick={() => {
+                              setCaregiverStep(4)
+                            }}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h5 className="font-medium">{prescription.medication}</h5>
+                                <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  Dr. {prescription.doctor} • {prescription.date}
+                                </p>
+                              </div>
+                              <Badge className="bg-secondary text-secondary-foreground">
+                                {prescription.status === "active" ? "Vigente" : "Vencida"}
+                              </Badge>
                             </div>
-                            <Badge className="bg-secondary text-secondary-foreground">
-                              {prescription.status === "active" ? "Vigente" : "Vencida"}
-                            </Badge>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
 
                   <div className="flex space-x-2">
                     <Button variant="outline" onClick={() => setCaregiverStep(2)} className="flex-1">
