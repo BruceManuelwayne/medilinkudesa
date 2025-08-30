@@ -277,7 +277,7 @@ export default function MediLinkLanding() {
                 <Heart className="w-5 h-5 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold text-foreground">MediLink</span>
-              <Badge className="bg-primary/10 text-primary ml-2">Demo Cuidador</Badge>
+              <Badge className="bg-primary/10 text-primary ml-2">Demo</Badge>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">Paso {caregiverStep} de 6</span>
