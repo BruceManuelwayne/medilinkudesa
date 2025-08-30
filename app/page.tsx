@@ -1399,7 +1399,7 @@ export default function MediLinkLanding() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                MediLink Para Cuidadores
+                MediLink Para Vos
               </button>
               <button
                 onClick={() => setActiveView("farmacias")}
@@ -1420,7 +1420,7 @@ export default function MediLinkLanding() {
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Play className="w-5 h-5 mr-2" />
-                Ver Demo Cuidador
+                Ver Demo 
               </Button>
               <Button
                 size="lg"
