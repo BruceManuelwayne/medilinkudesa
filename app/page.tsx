@@ -831,10 +831,10 @@ export default function MediLinkLanding() {
                         </div>
                         <Button
                           className="w-full"
-                          variant={index === 0 ? "default" : "outline"}
+                          variant={"outline"}
                           onClick={() => setCaregiverStep(5)}
                         >
-                          {index === 0 ? "Seleccionar y Continuar" : "Seleccionar"}
+                          {"Seleccionar"}
                         </Button>
                       </div>
                     ))}
