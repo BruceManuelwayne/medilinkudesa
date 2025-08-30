@@ -89,6 +89,10 @@ export default function MediLinkLanding() {
 
   const [uploadedPrescription, setUploadedPrescription] = useState<string | null>(null)
 
+  const [paymentMethod, setPaymentMethod] = useState("")
+  const [pickupDay, setPickupDay] = useState("")
+  const [pickupTime, setPickupTime] = useState("")
+
   const handlePrescriptionUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file && file.type.startsWith("image/")) {
@@ -653,10 +657,71 @@ export default function MediLinkLanding() {
                       <span className="font-medium">Precio final:</span>
                       <span className="text-lg font-bold text-primary">$2,450</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                      <span className="font-medium">Entrega:</span>
-                      <span>Retiro en farmacia</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Método de Pago</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        variant={paymentMethod === "online" ? "default" : "outline"}
+                        onClick={() => setPaymentMethod("online")}
+                        className="h-auto p-4 flex flex-col items-center space-y-2"
+                      >
+                        <CreditCard className="w-6 h-6" />
+                        <span>Pago Online</span>
+                      </Button>
+                      <Button
+                        variant={paymentMethod === "person" ? "default" : "outline"}
+                        onClick={() => setPaymentMethod("person")}
+                        className="h-auto p-4 flex flex-col items-center space-y-2"
+                      >
+                        <MapPin className="w-6 h-6" />
+                        <span>Pagar en Persona</span>
+                      </Button>
                     </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Coordinar Entrega</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Día de Retiro</label>
+                        <select
+                          value={pickupDay}
+                          onChange={(e) => setPickupDay(e.target.value)}
+                          className="w-full p-2 border rounded-md bg-background"
+                        >
+                          <option value="">Seleccionar día</option>
+                          <option value="hoy">Hoy</option>
+                          <option value="mañana">Mañana</option>
+                          <option value="pasado">Pasado mañana</option>
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Horario</label>
+                        <select
+                          value={pickupTime}
+                          onChange={(e) => setPickupTime(e.target.value)}
+                          className="w-full p-2 border rounded-md bg-background"
+                        >
+                          <option value="">Seleccionar horario</option>
+                          <option value="9-12">9:00 - 12:00</option>
+                          <option value="12-15">12:00 - 15:00</option>
+                          <option value="15-18">15:00 - 18:00</option>
+                          <option value="18-20">18:00 - 20:00</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {pickupDay && pickupTime && (
+                      <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+                        <p className="text-sm">
+                          <strong>Retiro programado:</strong>{" "}
+                          {pickupDay === "hoy" ? "Hoy" : pickupDay === "mañana" ? "Mañana" : "Pasado mañana"} entre las{" "}
+                          {pickupTime.replace("-", ":00 - ")}:00
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-4 border-l-4 border-primary bg-primary/5">
@@ -664,7 +729,9 @@ export default function MediLinkLanding() {
                     <ul className="text-sm space-y-1 text-muted-foreground">
                       <li>• El farmacéutico validará tu receta</li>
                       <li>• Recibirás una notificación cuando esté listo</li>
-                      <li>• Podrás retirar en horario de 9 a 20hs</li>
+                      {paymentMethod === "online" && <li>• Procederás al pago online seguro</li>}
+                      {paymentMethod === "person" && <li>• Pagarás al momento del retiro</li>}
+                      {pickupDay && pickupTime && <li>• Retira en el horario programado</li>}
                     </ul>
                   </div>
 
