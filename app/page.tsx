@@ -4,6 +4,9 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   CheckCircle,
   Shield,
@@ -21,10 +24,628 @@ import {
   BarChart3,
   FileText,
   Zap,
+  Play,
+  ArrowRight,
+  ArrowLeft,
+  User,
+  Plus,
+  Camera,
+  Search,
+  Star,
 } from "lucide-react"
+
+interface Profile {
+  id: string
+  name: string
+  age: number
+  obraSocial: string
+  relationship: string
+  prescriptions: Prescription[]
+}
+
+interface Prescription {
+  id: string
+  medication: string
+  dosage: string
+  doctor: string
+  date: string
+  status: "active" | "expired"
+}
 
 export default function MediLinkLanding() {
   const [activeView, setActiveView] = useState<"clientes" | "farmacias">("clientes")
+  const [demoMode, setDemoMode] = useState<"landing" | "caregiver-demo" | "pharmacy-demo">("landing")
+
+  const [caregiverStep, setCaregiverStep] = useState(1)
+  const [caregiverData, setCaregiverData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    obraSocial: "",
+    age: "",
+  })
+  const [profiles, setProfiles] = useState<Profile[]>([])
+  const [newProfile, setNewProfile] = useState({
+    name: "",
+    age: "",
+    obraSocial: "",
+    relationship: "",
+  })
+
+  const startCaregiverDemo = () => {
+    setDemoMode("caregiver-demo")
+    setCaregiverStep(1)
+  }
+  const startPharmacyDemo = () => setDemoMode("pharmacy-demo")
+  const backToLanding = () => setDemoMode("landing")
+
+  const samplePrescriptions: Prescription[] = [
+    {
+      id: "1",
+      medication: "Atorvastatina 20mg",
+      dosage: "1 comprimido por día",
+      doctor: "Dr. García",
+      date: "2024-01-15",
+      status: "active",
+    },
+    {
+      id: "2",
+      medication: "Losartán 50mg",
+      dosage: "1 comprimido cada 12hs",
+      doctor: "Dr. García",
+      date: "2024-01-15",
+      status: "active",
+    },
+  ]
+
+  const samplePharmacies = [
+    { name: "Farmacia San Juan", distance: "0.8 km", price: "$2,450", rating: 4.8, stock: "En stock" },
+    { name: "Farmacity Centro", distance: "1.2 km", price: "$2,380", rating: 4.6, stock: "En stock" },
+    { name: "Farmacia del Pueblo", distance: "1.5 km", price: "$2,520", rating: 4.7, stock: "Últimas unidades" },
+  ]
+
+  if (demoMode === "caregiver-demo") {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Demo Header */}
+        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-bold text-foreground">MediLink</span>
+              <Badge className="bg-primary/10 text-primary ml-2">Demo Cuidador</Badge>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-muted-foreground">Paso {caregiverStep} de 6</span>
+              <Button variant="outline" onClick={backToLanding}>
+                Volver al Inicio
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <div className="container mx-auto px-4 py-8">
+          {/* Progress Bar */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="flex items-center justify-between mb-4">
+              {[1, 2, 3, 4, 5, 6].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                      step <= caregiverStep ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {step}
+                  </div>
+                  {step < 6 && <div className={`w-16 h-1 mx-2 ${step < caregiverStep ? "bg-primary" : "bg-muted"}`} />}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Registro</span>
+              <span>Perfil</span>
+              <span>Familia</span>
+              <span>Recetas</span>
+              <span>Búsqueda</span>
+              <span>Entrega</span>
+            </div>
+          </div>
+
+          {/* Step Content */}
+          <div className="max-w-2xl mx-auto">
+            {caregiverStep === 1 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">¡Bienvenido a MediLink!</CardTitle>
+                  <CardDescription>
+                    Comencemos creando tu cuenta para gestionar medicamentos de forma segura
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nombre completo</Label>
+                    <Input
+                      id="name"
+                      placeholder="Ej: María González"
+                      value={caregiverData.name}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="maria@email.com"
+                      value={caregiverData.email}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Teléfono</Label>
+                    <Input
+                      id="phone"
+                      placeholder="+54 11 1234-5678"
+                      value={caregiverData.phone}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, phone: e.target.value })}
+                    />
+                  </div>
+                  <Button
+                    className="w-full"
+                    onClick={() => setCaregiverStep(2)}
+                    disabled={!caregiverData.name || !caregiverData.email}
+                  >
+                    Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 2 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Completa tu perfil</CardTitle>
+                  <CardDescription>Esta información nos ayuda a brindarte el mejor servicio</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="age">Edad</Label>
+                    <Input
+                      id="age"
+                      type="number"
+                      placeholder="45"
+                      value={caregiverData.age}
+                      onChange={(e) => setCaregiverData({ ...caregiverData, age: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="obra-social">Obra Social / Prepaga</Label>
+                    <Select
+                      value={caregiverData.obraSocial}
+                      onValueChange={(value) => setCaregiverData({ ...caregiverData, obraSocial: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona tu obra social" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="osde">OSDE</SelectItem>
+                        <SelectItem value="swiss">Swiss Medical</SelectItem>
+                        <SelectItem value="galeno">Galeno</SelectItem>
+                        <SelectItem value="pami">PAMI</SelectItem>
+                        <SelectItem value="ioma">IOMA</SelectItem>
+                        <SelectItem value="otra">Otra</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setCaregiverStep(1)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      onClick={() => setCaregiverStep(3)}
+                      disabled={!caregiverData.age || !caregiverData.obraSocial}
+                    >
+                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 3 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Agrega perfiles familiares</CardTitle>
+                  <CardDescription>Gestiona medicamentos para toda tu familia desde una cuenta</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {profiles.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold">Perfiles agregados:</h4>
+                      {profiles.map((profile) => (
+                        <div key={profile.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                              <User className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{profile.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {profile.age} años • {profile.relationship}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="border-2 border-dashed border-border rounded-lg p-6">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-name">Nombre</Label>
+                          <Input
+                            id="profile-name"
+                            placeholder="Ej: Roberto González"
+                            value={newProfile.name}
+                            onChange={(e) => setNewProfile({ ...newProfile, name: e.target.value })}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-age">Edad</Label>
+                          <Input
+                            id="profile-age"
+                            type="number"
+                            placeholder="72"
+                            value={newProfile.age}
+                            onChange={(e) => setNewProfile({ ...newProfile, age: e.target.value })}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-relationship">Parentesco</Label>
+                          <Select
+                            value={newProfile.relationship}
+                            onValueChange={(value) => setNewProfile({ ...newProfile, relationship: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Seleccionar" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="padre">Padre</SelectItem>
+                              <SelectItem value="madre">Madre</SelectItem>
+                              <SelectItem value="hijo">Hijo/a</SelectItem>
+                              <SelectItem value="conyuge">Cónyuge</SelectItem>
+                              <SelectItem value="hermano">Hermano/a</SelectItem>
+                              <SelectItem value="otro">Otro</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="profile-obra-social">Obra Social</Label>
+                          <Select
+                            value={newProfile.obraSocial}
+                            onValueChange={(value) => setNewProfile({ ...newProfile, obraSocial: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Seleccionar" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pami">PAMI</SelectItem>
+                              <SelectItem value="osde">OSDE</SelectItem>
+                              <SelectItem value="swiss">Swiss Medical</SelectItem>
+                              <SelectItem value="ioma">IOMA</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        className="w-full bg-transparent"
+                        onClick={() => {
+                          if (newProfile.name && newProfile.age && newProfile.relationship && newProfile.obraSocial) {
+                            setProfiles([
+                              ...profiles,
+                              {
+                                id: Date.now().toString(),
+                                name: newProfile.name,
+                                age: Number.parseInt(newProfile.age),
+                                obraSocial: newProfile.obraSocial,
+                                relationship: newProfile.relationship,
+                                prescriptions: [],
+                              },
+                            ])
+                            setNewProfile({ name: "", age: "", obraSocial: "", relationship: "" })
+                          }
+                        }}
+                        disabled={
+                          !newProfile.name || !newProfile.age || !newProfile.relationship || !newProfile.obraSocial
+                        }
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> Agregar Perfil
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setCaregiverStep(2)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      onClick={() => {
+                        // Add sample prescriptions to first profile for demo
+                        if (profiles.length > 0) {
+                          const updatedProfiles = [...profiles]
+                          updatedProfiles[0].prescriptions = samplePrescriptions
+                          setProfiles(updatedProfiles)
+                        }
+                        setCaregiverStep(4)
+                      }}
+                    >
+                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 4 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Escanea las recetas médicas</CardTitle>
+                  <CardDescription>
+                    Agrega las recetas de {profiles[0]?.name || "tu familiar"} para encontrar medicamentos
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="border-2 border-dashed border-primary/20 rounded-lg p-8 text-center bg-primary/5">
+                    <Camera className="w-12 h-12 text-primary mx-auto mb-4" />
+                    <h4 className="font-semibold mb-2">Escanea tu receta</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Usa la cámara para escanear automáticamente la receta médica
+                    </p>
+                    <Button className="mb-4">
+                      <Camera className="w-4 h-4 mr-2" /> Abrir Cámara
+                    </Button>
+                    <p className="text-xs text-muted-foreground">También puedes subir una foto desde tu galería</p>
+                  </div>
+
+                  {profiles[0]?.prescriptions && profiles[0].prescriptions.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold">Recetas escaneadas:</h4>
+                      {profiles[0].prescriptions.map((prescription) => (
+                        <div key={prescription.id} className="p-4 border rounded-lg">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h5 className="font-medium">{prescription.medication}</h5>
+                              <p className="text-sm text-muted-foreground">{prescription.dosage}</p>
+                              <p className="text-xs text-muted-foreground">
+                                Dr. {prescription.doctor} • {prescription.date}
+                              </p>
+                            </div>
+                            <Badge className="bg-secondary text-secondary-foreground">
+                              {prescription.status === "active" ? "Vigente" : "Vencida"}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setCaregiverStep(3)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      onClick={() => setCaregiverStep(5)}
+                      disabled={!profiles[0]?.prescriptions?.length}
+                    >
+                      Buscar Farmacias <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 5 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Farmacias cercanas</CardTitle>
+                  <CardDescription>
+                    Encontramos farmacias con {profiles[0]?.prescriptions?.[0]?.medication} disponible
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
+                    <Search className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-sm">
+                      Buscando: <strong>{profiles[0]?.prescriptions?.[0]?.medication}</strong>
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {samplePharmacies.map((pharmacy, index) => (
+                      <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h4 className="font-semibold">{pharmacy.name}</h4>
+                            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                              <span className="flex items-center">
+                                <MapPin className="w-3 h-3 mr-1" />
+                                {pharmacy.distance}
+                              </span>
+                              <span className="flex items-center">
+                                <Star className="w-3 h-3 mr-1 fill-current text-yellow-500" />
+                                {pharmacy.rating}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-primary">{pharmacy.price}</p>
+                            <Badge
+                              variant={pharmacy.stock === "En stock" ? "default" : "secondary"}
+                              className="text-xs"
+                            >
+                              {pharmacy.stock}
+                            </Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full"
+                          variant={index === 0 ? "default" : "outline"}
+                          onClick={() => setCaregiverStep(6)}
+                        >
+                          {index === 0 ? "Seleccionar y Continuar" : "Seleccionar"}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setCaregiverStep(4)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {caregiverStep === 6 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">¡Pedido confirmado!</CardTitle>
+                  <CardDescription>Tu medicamento será preparado bajo supervisión farmacéutica</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="text-center p-6 bg-secondary/10 rounded-lg">
+                    <CheckCircle className="w-16 h-16 text-secondary mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Pedido #ML-2024-001</h3>
+                    <p className="text-muted-foreground">Farmacia San Juan preparará tu medicamento</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                      <span className="font-medium">Medicamento:</span>
+                      <span>{profiles[0]?.prescriptions?.[0]?.medication}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                      <span className="font-medium">Precio final:</span>
+                      <span className="text-lg font-bold text-primary">$2,450</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                      <span className="font-medium">Entrega:</span>
+                      <span>Retiro en farmacia</span>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border-l-4 border-primary bg-primary/5">
+                    <h4 className="font-semibold mb-2">Próximos pasos:</h4>
+                    <ul className="text-sm space-y-1 text-muted-foreground">
+                      <li>• El farmacéutico validará tu receta</li>
+                      <li>• Recibirás una notificación cuando esté listo</li>
+                      <li>• Podrás retirar en horario de 9 a 20hs</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={backToLanding} className="flex-1 bg-transparent">
+                      Volver al Inicio
+                    </Button>
+                    <Button className="flex-1" onClick={() => setCaregiverStep(1)}>
+                      Reiniciar Demo
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (demoMode === "pharmacy-demo") {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Demo Header */}
+        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-bold text-foreground">MediLink</span>
+              <Badge className="bg-secondary/10 text-secondary ml-2">Demo Farmacia</Badge>
+            </div>
+            <Button variant="outline" onClick={backToLanding}>
+              Volver al Inicio
+            </Button>
+          </div>
+        </header>
+
+        {/* Demo Content Placeholder */}
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Demo: Plataforma para Farmacias</h1>
+            <p className="text-xl text-muted-foreground">
+              Explora cómo MediLink digitaliza y amplía el alcance de tu farmacia
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <Card className="p-8">
+              <CardContent className="text-center">
+                <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Play className="w-8 h-8 text-secondary" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-4">Demo Interactivo Próximamente</h3>
+                <p className="text-muted-foreground mb-6">
+                  Estamos preparando una experiencia completa que te mostrará:
+                </p>
+                <div className="grid md:grid-cols-2 gap-6 text-left">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Registro de farmacia</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Configuración de inventario</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Dashboard de gestión</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Validación de recetas</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Conexión con pacientes</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary" />
+                      <span>Reportes y análisis</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +690,7 @@ export default function MediLinkLanding() {
             </p>
 
             {/* Large Toggle */}
-            <div className="bg-card border border-border rounded-2xl p-2 inline-flex mb-12 shadow-lg">
+            <div className="bg-card border border-border rounded-2xl p-2 inline-flex mb-8 shadow-lg">
               <button
                 onClick={() => setActiveView("clientes")}
                 className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
@@ -90,6 +711,26 @@ export default function MediLinkLanding() {
               >
                 MediLink Para Farmacias
               </button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                onClick={startCaregiverDemo}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Ver Demo Cuidador
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={startPharmacyDemo}
+                className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground bg-transparent"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Ver Demo Farmacia
+              </Button>
             </div>
           </div>
         </div>
@@ -117,7 +758,7 @@ export default function MediLinkLanding() {
                     <CardDescription>Escanea y valida tus recetas médicas de forma instantánea</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         Validación automática
@@ -127,6 +768,9 @@ export default function MediLinkLanding() {
                         Compatible con todas las obras sociales
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startCaregiverDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
 
@@ -139,7 +783,7 @@ export default function MediLinkLanding() {
                     <CardDescription>Encuentra farmacias cercanas con tus medicamentos disponibles</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         Geolocalización precisa
@@ -149,6 +793,9 @@ export default function MediLinkLanding() {
                         Comparación de precios
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startCaregiverDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
 
@@ -163,7 +810,7 @@ export default function MediLinkLanding() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         Horarios flexibles
@@ -173,6 +820,9 @@ export default function MediLinkLanding() {
                         Seguimiento en tiempo real
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startCaregiverDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
@@ -363,7 +1013,7 @@ export default function MediLinkLanding() {
                     <CardDescription>Conecta con pacientes que buscan tus medicamentos</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         Mayor visibilidad
@@ -373,6 +1023,9 @@ export default function MediLinkLanding() {
                         Nuevos canales de venta
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startPharmacyDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
 
@@ -385,7 +1038,7 @@ export default function MediLinkLanding() {
                     <CardDescription>Automatiza la validación de recetas y gestión de stock</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         Menos papeleo
@@ -395,6 +1048,9 @@ export default function MediLinkLanding() {
                         Control de inventario
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startPharmacyDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
 
@@ -407,7 +1063,7 @@ export default function MediLinkLanding() {
                     <CardDescription>Mantén la supervisión profesional en cada dispensación</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       <li className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-secondary mr-2" />
                         100% legal y seguro
@@ -417,6 +1073,9 @@ export default function MediLinkLanding() {
                         Trazabilidad completa
                       </li>
                     </ul>
+                    <Button variant="outline" size="sm" onClick={startPharmacyDemo} className="w-full bg-transparent">
+                      Probar Demo <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
@@ -642,15 +1301,16 @@ export default function MediLinkLanding() {
             Únete a la plataforma que está transformando la experiencia farmacéutica en Argentina
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8">
-              Registrar Farmacia
+            <Button size="lg" variant="secondary" className="text-lg px-8" onClick={startPharmacyDemo}>
+              Ver Demo Farmacia
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
+              onClick={startCaregiverDemo}
             >
-              Descargar App
+              Ver Demo Cuidador
             </Button>
           </div>
         </div>
