@@ -2010,7 +2010,7 @@ export default function MediLinkLanding() {
               className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
               onClick={startCaregiverDemo}
             >
-              Ver Demo Cuidador
+              Ver Demo
             </Button>
           </div>
         </div>
