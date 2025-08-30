@@ -71,6 +71,10 @@ export default function MediLinkLanding() {
     phone: "",
     obraSocial: "",
     age: "",
+    dni: "",
+    address: "",
+    birthDate: "",
+    obraSocialCategory: "",
   })
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [newProfile, setNewProfile] = useState({
@@ -78,6 +82,10 @@ export default function MediLinkLanding() {
     age: "",
     obraSocial: "",
     relationship: "",
+    dni: "",
+    address: "",
+    birthDate: "",
+    obraSocialCategory: "",
   })
 
   const [pharmacyStep, setPharmacyStep] = useState(1)
