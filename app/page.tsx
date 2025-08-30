@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,6 +34,9 @@ import {
   Camera,
   Search,
   Star,
+  Package,
+  Eye,
+  TrendingUp,
 } from "lucide-react"
 
 interface Profile {
@@ -72,11 +77,43 @@ export default function MediLinkLanding() {
     relationship: "",
   })
 
+  const [pharmacyStep, setPharmacyStep] = useState(1)
+  const [pharmacyData, setPharmacyData] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    license: "",
+    pharmacist: "",
+  })
+
+  const [uploadedPrescription, setUploadedPrescription] = useState<string | null>(null)
+
+  const handlePrescriptionUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setUploadedPrescription(e.target?.result as string)
+        // Add sample prescriptions to first profile for demo
+        if (profiles.length > 0) {
+          const updatedProfiles = [...profiles]
+          updatedProfiles[0].prescriptions = samplePrescriptions
+          setProfiles(updatedProfiles)
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const startCaregiverDemo = () => {
     setDemoMode("caregiver-demo")
     setCaregiverStep(1)
   }
-  const startPharmacyDemo = () => setDemoMode("pharmacy-demo")
+  const startPharmacyDemo = () => {
+    setDemoMode("pharmacy-demo")
+    setPharmacyStep(1)
+  }
   const backToLanding = () => setDemoMode("landing")
 
   const samplePrescriptions: Prescription[] = [
@@ -102,6 +139,43 @@ export default function MediLinkLanding() {
     { name: "Farmacia San Juan", distance: "0.8 km", price: "$2,450", rating: 4.8, stock: "En stock" },
     { name: "Farmacity Centro", distance: "1.2 km", price: "$2,380", rating: 4.6, stock: "En stock" },
     { name: "Farmacia del Pueblo", distance: "1.5 km", price: "$2,520", rating: 4.7, stock: "Últimas unidades" },
+  ]
+
+  const samplePrescriptionRequests = [
+    {
+      id: "REQ-001",
+      patient: "María González",
+      medication: "Atorvastatina 20mg",
+      quantity: "30 comp.",
+      status: "pending",
+      time: "10:30",
+      obraSocial: "OSDE",
+    },
+    {
+      id: "REQ-002",
+      patient: "Roberto Fernández",
+      medication: "Losartán 50mg",
+      quantity: "60 comp.",
+      status: "approved",
+      time: "10:15",
+      obraSocial: "PAMI",
+    },
+    {
+      id: "REQ-003",
+      patient: "Ana López",
+      medication: "Metformina 850mg",
+      quantity: "90 comp.",
+      status: "pending",
+      time: "09:45",
+      obraSocial: "Swiss Medical",
+    },
+  ]
+
+  const sampleInventory = [
+    { medication: "Atorvastatina 20mg", stock: 45, minStock: 20, price: 2450, status: "good" },
+    { medication: "Losartán 50mg", stock: 12, minStock: 15, price: 1890, status: "low" },
+    { medication: "Metformina 850mg", stock: 78, minStock: 30, price: 980, status: "good" },
+    { medication: "Omeprazol 20mg", stock: 5, minStock: 25, price: 1250, status: "critical" },
   ]
 
   if (demoMode === "caregiver-demo") {
@@ -396,7 +470,7 @@ export default function MediLinkLanding() {
             )}
 
             {caregiverStep === 4 && (
-              <Card className="p-8">
+              <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader className="text-center pb-6">
                   <CardTitle className="text-2xl">Escanea las recetas médicas</CardTitle>
                   <CardDescription>
@@ -410,10 +484,50 @@ export default function MediLinkLanding() {
                     <p className="text-sm text-muted-foreground mb-4">
                       Usa la cámara para escanear automáticamente la receta médica
                     </p>
-                    <Button className="mb-4">
-                      <Camera className="w-4 h-4 mr-2" /> Abrir Cámara
-                    </Button>
-                    <p className="text-xs text-muted-foreground">También puedes subir una foto desde tu galería</p>
+
+                    <div className="space-y-3">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePrescriptionUpload}
+                        className="hidden"
+                        id="prescription-upload"
+                      />
+                      <label htmlFor="prescription-upload">
+                        <Button className="mb-2" asChild>
+                          <span>
+                            <Camera className="w-4 h-4 mr-2" /> Subir Foto de Receta
+                          </span>
+                        </Button>
+                      </label>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          // Add sample prescriptions for demo without upload
+                          if (profiles.length > 0) {
+                            const updatedProfiles = [...profiles]
+                            updatedProfiles[0].prescriptions = samplePrescriptions
+                            setProfiles(updatedProfiles)
+                          }
+                        }}
+                      >
+                        <FileText className="w-4 h-4 mr-2" /> Usar Recetas de Ejemplo
+                      </Button>
+                    </div>
+
+                    {uploadedPrescription && (
+                      <div className="mt-4 p-4 border rounded-lg bg-white">
+                        <p className="text-sm font-medium mb-2">Receta subida:</p>
+                        <img
+                          src={uploadedPrescription || "/placeholder.svg"}
+                          alt="Receta subida"
+                          className="max-w-full h-32 object-contain mx-auto rounded border"
+                        />
+                        <p className="text-xs text-green-600 mt-2">✓ Receta procesada exitosamente</p>
+                      </div>
+                    )}
+
+                    <p className="text-xs text-muted-foreground">También puedes usar recetas de ejemplo para la demo</p>
                   </div>
 
                   {profiles[0]?.prescriptions && profiles[0].prescriptions.length > 0 && (
@@ -584,63 +698,389 @@ export default function MediLinkLanding() {
               <span className="text-xl font-bold text-foreground">MediLink</span>
               <Badge className="bg-secondary/10 text-secondary ml-2">Demo Farmacia</Badge>
             </div>
-            <Button variant="outline" onClick={backToLanding}>
-              Volver al Inicio
-            </Button>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-muted-foreground">Paso {pharmacyStep} de 5</span>
+              <Button variant="outline" onClick={backToLanding}>
+                Volver al Inicio
+              </Button>
+            </div>
           </div>
         </header>
 
-        {/* Demo Content Placeholder */}
-        <div className="container mx-auto px-4 py-20">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-foreground mb-4">Demo: Plataforma para Farmacias</h1>
-            <p className="text-xl text-muted-foreground">
-              Explora cómo MediLink digitaliza y amplía el alcance de tu farmacia
-            </p>
+        <div className="container mx-auto px-4 py-8">
+          {/* Progress Bar */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="flex items-center justify-between mb-4">
+              {[1, 2, 3, 4, 5].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                      step <= pharmacyStep ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {step}
+                  </div>
+                  {step < 5 && <div className={`w-16 h-1 mx-2 ${step < pharmacyStep ? "bg-secondary" : "bg-muted"}`} />}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Registro</span>
+              <span>Inventario</span>
+              <span>Dashboard</span>
+              <span>Validación</span>
+              <span>Análisis</span>
+            </div>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            <Card className="p-8">
-              <CardContent className="text-center">
-                <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Play className="w-8 h-8 text-secondary" />
-                </div>
-                <h3 className="text-2xl font-bold text-foreground mb-4">Demo Interactivo Próximamente</h3>
-                <p className="text-muted-foreground mb-6">
-                  Estamos preparando una experiencia completa que te mostrará:
-                </p>
-                <div className="grid md:grid-cols-2 gap-6 text-left">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Registro de farmacia</span>
+          {/* Step Content */}
+          <div className="max-w-2xl mx-auto">
+            {pharmacyStep === 1 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Registra tu farmacia en MediLink</CardTitle>
+                  <CardDescription>Únete a la red de farmacias digitales más grande de Argentina</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="pharmacy-name">Nombre de la farmacia</Label>
+                    <Input
+                      id="pharmacy-name"
+                      placeholder="Ej: Farmacia San Juan"
+                      value={pharmacyData.name}
+                      onChange={(e) => setPharmacyData({ ...pharmacyData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pharmacy-address">Dirección completa</Label>
+                    <Input
+                      id="pharmacy-address"
+                      placeholder="Av. Corrientes 1234, CABA"
+                      value={pharmacyData.address}
+                      onChange={(e) => setPharmacyData({ ...pharmacyData, address: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="pharmacy-phone">Teléfono</Label>
+                      <Input
+                        id="pharmacy-phone"
+                        placeholder="+54 11 1234-5678"
+                        value={pharmacyData.phone}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, phone: e.target.value })}
+                      />
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Configuración de inventario</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Dashboard de gestión</span>
+                    <div className="space-y-2">
+                      <Label htmlFor="pharmacy-email">Email</Label>
+                      <Input
+                        id="pharmacy-email"
+                        type="email"
+                        placeholder="farmacia@email.com"
+                        value={pharmacyData.email}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, email: e.target.value })}
+                      />
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Validación de recetas</span>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="pharmacy-license">Matrícula farmacia</Label>
+                      <Input
+                        id="pharmacy-license"
+                        placeholder="12345"
+                        value={pharmacyData.license}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, license: e.target.value })}
+                      />
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Conexión con pacientes</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-secondary" />
-                      <span>Reportes y análisis</span>
+                    <div className="space-y-2">
+                      <Label htmlFor="pharmacist-name">Farmacéutico responsable</Label>
+                      <Input
+                        id="pharmacist-name"
+                        placeholder="Dr. Juan Pérez"
+                        value={pharmacyData.pharmacist}
+                        onChange={(e) => setPharmacyData({ ...pharmacyData, pharmacist: e.target.value })}
+                      />
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                  <Button
+                    className="w-full"
+                    onClick={() => setPharmacyStep(2)}
+                    disabled={!pharmacyData.name || !pharmacyData.address || !pharmacyData.phone}
+                  >
+                    Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {pharmacyStep === 2 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Configura tu inventario</CardTitle>
+                  <CardDescription>Sincroniza tu stock actual con la plataforma MediLink</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="p-4 border-2 border-dashed border-secondary/20 rounded-lg bg-secondary/5 text-center">
+                    <Package className="w-12 h-12 text-secondary mx-auto mb-4" />
+                    <h4 className="font-semibold mb-2">Importar inventario existente</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Conecta con tu sistema actual o importa desde archivo CSV
+                    </p>
+                    <div className="space-y-2">
+                      <Button variant="outline" className="w-full bg-transparent">
+                        <FileText className="w-4 h-4 mr-2" /> Importar desde CSV
+                      </Button>
+                      <Button variant="outline" className="w-full bg-transparent">
+                        <Zap className="w-4 h-4 mr-2" /> Conectar sistema existente
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Vista previa del inventario:</h4>
+                    {sampleInventory.map((item, index) => (
+                      <div key={index} className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-medium">{item.medication}</h5>
+                          <Badge
+                            variant={
+                              item.status === "good" ? "default" : item.status === "low" ? "secondary" : "destructive"
+                            }
+                            className="text-xs"
+                          >
+                            {item.status === "good"
+                              ? "Stock OK"
+                              : item.status === "low"
+                                ? "Stock Bajo"
+                                : "Stock Crítico"}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4 text-sm text-muted-foreground">
+                          <span>Stock: {item.stock} unidades</span>
+                          <span>Mínimo: {item.minStock}</span>
+                          <span>Precio: ${item.price}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setPharmacyStep(1)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button className="flex-1" onClick={() => setPharmacyStep(3)}>
+                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {pharmacyStep === 3 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Dashboard de gestión</CardTitle>
+                  <CardDescription>Controla todas las operaciones de tu farmacia desde un solo lugar</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-secondary/10 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-secondary">24</div>
+                      <div className="text-sm text-muted-foreground">Pedidos hoy</div>
+                    </div>
+                    <div className="p-4 bg-primary/10 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-primary">$48,750</div>
+                      <div className="text-sm text-muted-foreground">Ventas del día</div>
+                    </div>
+                  </div>
+
+                  {/* Recent Orders */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Pedidos recientes:</h4>
+                    {samplePrescriptionRequests.map((request) => (
+                      <div key={request.id} className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h5 className="font-medium">{request.patient}</h5>
+                            <p className="text-sm text-muted-foreground">
+                              {request.medication} • {request.quantity}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant={request.status === "approved" ? "default" : "secondary"} className="mb-1">
+                              {request.status === "approved" ? "Aprobado" : "Pendiente"}
+                            </Badge>
+                            <p className="text-xs text-muted-foreground">{request.time}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">{request.obraSocial}</span>
+                          {request.status === "pending" && (
+                            <Button size="sm" variant="outline" className="bg-transparent">
+                              <Eye className="w-3 h-3 mr-1" /> Revisar
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setPharmacyStep(2)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                    <Button className="flex-1" onClick={() => setPharmacyStep(4)}>
+                      Ver Validación <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {pharmacyStep === 4 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Validación de recetas</CardTitle>
+                  <CardDescription>
+                    Proceso de validación profesional para garantizar cumplimiento regulatorio
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="p-4 border-l-4 border-secondary bg-secondary/5">
+                    <h4 className="font-semibold mb-2 flex items-center">
+                      <Stethoscope className="w-4 h-4 mr-2 text-secondary" />
+                      Receta pendiente de validación
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="font-medium">Paciente:</span> María González
+                        </div>
+                        <div>
+                          <span className="font-medium">Obra Social:</span> OSDE
+                        </div>
+                        <div>
+                          <span className="font-medium">Médico:</span> Dr. García
+                        </div>
+                        <div>
+                          <span className="font-medium">Fecha:</span> 15/01/2024
+                        </div>
+                      </div>
+                      <div className="p-3 bg-white border rounded">
+                        <h5 className="font-medium mb-1">Medicamento prescrito:</h5>
+                        <p className="text-sm">Atorvastatina 20mg - 1 comprimido por día</p>
+                        <p className="text-xs text-muted-foreground mt-1">Cantidad: 30 comprimidos</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Verificaciones automáticas:</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-secondary" />
+                        <span className="text-sm">Receta válida y vigente</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-secondary" />
+                        <span className="text-sm">Médico matriculado verificado</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-secondary" />
+                        <span className="text-sm">Cobertura OSDE confirmada</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-secondary" />
+                        <span className="text-sm">Stock disponible: 45 unidades</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                    <h4 className="font-semibold mb-2 text-primary">Decisión del farmacéutico:</h4>
+                    <div className="flex space-x-2">
+                      <Button className="flex-1" onClick={() => setPharmacyStep(5)}>
+                        <CheckCircle className="w-4 h-4 mr-2" /> Aprobar Dispensación
+                      </Button>
+                      <Button variant="outline" className="flex-1 bg-transparent">
+                        Rechazar
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={() => setPharmacyStep(3)} className="flex-1">
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {pharmacyStep === 5 && (
+              <Card className="p-8">
+                <CardHeader className="text-center pb-6">
+                  <CardTitle className="text-2xl">Análisis y reportes</CardTitle>
+                  <CardDescription>Insights para optimizar tu farmacia y aumentar ventas</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="text-center p-6 bg-secondary/10 rounded-lg">
+                    <TrendingUp className="w-16 h-16 text-secondary mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">¡Dispensación exitosa!</h3>
+                    <p className="text-muted-foreground">El medicamento fue preparado y el paciente notificado</p>
+                  </div>
+
+                  {/* Analytics Cards */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 border rounded-lg text-center">
+                      <div className="text-2xl font-bold text-secondary">+35%</div>
+                      <div className="text-sm text-muted-foreground">Ventas vs mes anterior</div>
+                    </div>
+                    <div className="p-4 border rounded-lg text-center">
+                      <div className="text-2xl font-bold text-primary">127</div>
+                      <div className="text-sm text-muted-foreground">Nuevos clientes</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Medicamentos más solicitados:</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center p-3 bg-muted rounded">
+                        <span className="text-sm">Atorvastatina 20mg</span>
+                        <Badge variant="secondary">45 pedidos</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted rounded">
+                        <span className="text-sm">Losartán 50mg</span>
+                        <Badge variant="secondary">38 pedidos</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted rounded">
+                        <span className="text-sm">Metformina 850mg</span>
+                        <Badge variant="secondary">32 pedidos</Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border-l-4 border-primary bg-primary/5">
+                    <h4 className="font-semibold mb-2">Beneficios de MediLink:</h4>
+                    <ul className="text-sm space-y-1 text-muted-foreground">
+                      <li>• Aumento promedio del 35% en ventas</li>
+                      <li>• Reducción del 60% en tiempo de gestión</li>
+                      <li>• Acceso a más de 50,000 pacientes activos</li>
+                      <li>• Cumplimiento regulatorio garantizado</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" onClick={backToLanding} className="flex-1 bg-transparent">
+                      Volver al Inicio
+                    </Button>
+                    <Button className="flex-1" onClick={() => setPharmacyStep(1)}>
+                      Reiniciar Demo
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
