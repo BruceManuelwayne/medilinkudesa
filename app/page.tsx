@@ -570,7 +570,7 @@ export default function MediLinkLanding() {
                       </div>
                       <Button
                         variant="outline"
-                        className="w-full bg-transparent"
+                        className="w-full bg-blue-"
                         onClick={() => {
                           const calculatedAge = newProfile.birthDate
                             ? new Date().getFullYear() - new Date(newProfile.birthDate).getFullYear()
