@@ -969,6 +969,13 @@ export default function MediLinkLanding() {
                       <span className="font-medium">Subtotal medicamento:</span>
                       <span>$2,450</span>
                     </div>
+                    <div className="flex justify-between items-center mb-2 text-green-600">
+                      <span className="font-medium">
+                        Descuento obra social (
+                        {profiles[selectedProfileForPrescription]?.obraSocial || caregiverData.obraSocial}):
+                      </span>
+                      <span>-$735 (30%)</span>
+                    </div>
                     {deliveryMethod === "delivery" && (
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-medium">Costo de envío:</span>
@@ -979,7 +986,7 @@ export default function MediLinkLanding() {
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-lg">Total:</span>
                       <span className="text-lg font-bold text-primary">
-                        ${deliveryMethod === "delivery" ? "2,950" : "2,450"}
+                        ${deliveryMethod === "delivery" ? "2,215" : "1,715"}
                       </span>
                     </div>
                   </div>
