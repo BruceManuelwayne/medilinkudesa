@@ -38,7 +38,6 @@ import {
   Eye,
   TrendingUp,
   Globe,
-  Puzzle,
   X,
   Banknote,
 } from "lucide-react"
@@ -829,11 +828,7 @@ export default function MediLinkLanding() {
                             </Badge>
                           </div>
                         </div>
-                        <Button
-                          className="w-full"
-                          variant={"outline"}
-                          onClick={() => setCaregiverStep(5)}
-                        >
+                        <Button className="w-full" variant={"outline"} onClick={() => setCaregiverStep(5)}>
                           {"Seleccionar"}
                         </Button>
                       </div>
@@ -1159,23 +1154,15 @@ export default function MediLinkLanding() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="p-4 border-2 border-dashed border-secondary/20 rounded-lg bg-secondary/5 text-center">
-                      <Globe className="w-12 h-12 text-secondary mx-auto mb-3" />
-                      <h4 className="font-semibold mb-2">¿No tienes sitio web?</h4>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Generamos un sitio web completo para tu farmacia
+                  <div className="flex justify-center mb-6">
+                    <div className="p-6 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5 text-center max-w-md">
+                      <Globe className="w-16 h-16 text-primary mx-auto mb-4" />
+                      <h4 className="font-semibold text-lg mb-3">Crea E-Farmacia</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Generamos un sitio web completo para tu farmacia con integración total a MediLink
                       </p>
-                      <Badge variant="secondary" className="text-xs">
-                        Sitio web incluido
-                      </Badge>
-                    </div>
-                    <div className="p-4 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5 text-center">
-                      <Puzzle className="w-12 h-12 text-primary mx-auto mb-3" />
-                      <h4 className="font-semibold mb-2">¿Ya tienes sitio web?</h4>
-                      <p className="text-sm text-muted-foreground mb-3">Plugin que se integra con tu sitio existente</p>
                       <Badge variant="default" className="text-xs">
-                        Plugin WordPress/Shopify
+                        Sitio web + Plugin incluido
                       </Badge>
                     </div>
                   </div>
