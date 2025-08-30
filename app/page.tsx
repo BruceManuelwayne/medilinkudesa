@@ -354,11 +354,7 @@ export default function MediLinkLanding() {
                       onChange={(e) => setCaregiverData({ ...caregiverData, phone: e.target.value })}
                     />
                   </div>
-                  <Button
-                    className="w-full"
-                    onClick={() => setCaregiverStep(2)}
-                    disabled={!caregiverData.name || !caregiverData.email}
-                  >
+                  <Button className="w-full" onClick={() => setCaregiverStep(2)}>
                     Continuar <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
@@ -405,11 +401,7 @@ export default function MediLinkLanding() {
                     <Button variant="outline" onClick={() => setCaregiverStep(1)} className="flex-1">
                       <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
-                    <Button
-                      className="flex-1"
-                      onClick={() => setCaregiverStep(3)}
-                      disabled={!caregiverData.age || !caregiverData.obraSocial}
-                    >
+                    <Button className="flex-1" onClick={() => setCaregiverStep(3)}>
                       Continuar <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </div>
@@ -510,24 +502,19 @@ export default function MediLinkLanding() {
                         variant="outline"
                         className="w-full bg-transparent"
                         onClick={() => {
-                          if (newProfile.name && newProfile.age && newProfile.relationship && newProfile.obraSocial) {
-                            setProfiles([
-                              ...profiles,
-                              {
-                                id: Date.now().toString(),
-                                name: newProfile.name,
-                                age: Number.parseInt(newProfile.age),
-                                obraSocial: newProfile.obraSocial,
-                                relationship: newProfile.relationship,
-                                prescriptions: [],
-                              },
-                            ])
-                            setNewProfile({ name: "", age: "", obraSocial: "", relationship: "" })
-                          }
+                          setProfiles([
+                            ...profiles,
+                            {
+                              id: Date.now().toString(),
+                              name: newProfile.name || "Perfil sin nombre",
+                              age: Number.parseInt(newProfile.age) || 0,
+                              obraSocial: newProfile.obraSocial || "No especificada",
+                              relationship: newProfile.relationship || "Familiar",
+                              prescriptions: [],
+                            },
+                          ])
+                          setNewProfile({ name: "", age: "", obraSocial: "", relationship: "" })
                         }}
-                        disabled={
-                          !newProfile.name || !newProfile.age || !newProfile.relationship || !newProfile.obraSocial
-                        }
                       >
                         <Plus className="w-4 h-4 mr-2" /> Agregar Perfil
                       </Button>
@@ -644,11 +631,7 @@ export default function MediLinkLanding() {
                     <Button variant="outline" onClick={() => setCaregiverStep(3)} className="flex-1">
                       <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
                     </Button>
-                    <Button
-                      className="flex-1"
-                      onClick={() => setCaregiverStep(5)}
-                      disabled={!profiles[0]?.prescriptions?.length}
-                    >
+                    <Button className="flex-1" onClick={() => setCaregiverStep(5)}>
                       Buscar Farmacias <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </div>
@@ -998,11 +981,7 @@ export default function MediLinkLanding() {
                     </div>
                   </div>
 
-                  <Button
-                    className="w-full"
-                    onClick={() => setPharmacyStep(2)}
-                    disabled={!pharmacyData.name || !pharmacyData.address || !pharmacyData.phone}
-                  >
+                  <Button className="w-full" onClick={() => setPharmacyStep(2)}>
                     Continuar <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
@@ -1420,7 +1399,7 @@ export default function MediLinkLanding() {
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Play className="w-5 h-5 mr-2" />
-                Ver Demo 
+                Ver Demo
               </Button>
               <Button
                 size="lg"
