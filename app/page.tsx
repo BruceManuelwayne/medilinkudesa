@@ -18,8 +18,6 @@ import {
   Stethoscope,
   Pill,
   Heart,
-  Phone,
-  Mail,
   Smartphone,
   CreditCard,
   Truck,
@@ -34,11 +32,7 @@ import {
   Camera,
   Search,
   Star,
-  Package,
-  Eye,
   TrendingUp,
-  Globe,
-  X,
   Banknote,
 } from "lucide-react"
 
@@ -1101,415 +1095,28 @@ export default function MediLinkLanding() {
                       {orderConfirmed ? "Reiniciar Demo" : "Confirmar Pedido"}
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
 
-  if (demoMode === "pharmacy-demo") {
-    return (
-      <div className="min-h-screen bg-background">
-        {/* Demo Header */}
-        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Heart className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold text-foreground">MediLink</span>
-              <Badge className="bg-secondary/10 text-secondary ml-2">Demo Farmacia</Badge>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">Paso {pharmacyStep} de 5</span>
-              <Button variant="outline" onClick={backToLanding}>
-                Volver al Inicio
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        <div className="container mx-auto px-4 py-8">
-          {/* Progress Bar */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <div className="flex items-center justify-between mb-4">
-              {[1, 2, 3, 4, 5].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                      step <= pharmacyStep ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {step}
-                  </div>
-                  {step < 5 && <div className={`w-16 h-1 mx-2 ${step < pharmacyStep ? "bg-secondary" : "bg-muted"}`} />}
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Registro</span>
-              <span>Inventario</span>
-              <span>Dashboard</span>
-              <span>Validación</span>
-              <span>Análisis</span>
-            </div>
-          </div>
-
-          {/* Step Content */}
-          <div className="max-w-2xl mx-auto">
-            {pharmacyStep === 1 && (
-              <Card className="p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Únete a MediLink</CardTitle>
-                  <CardDescription>
-                    Plataforma integral que genera tu sitio web y se integra con tu farmacia existente
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex justify-center mb-6">
-                    <div className="p-6 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5 text-center max-w-md">
-                      <Globe className="w-16 h-16 text-primary mx-auto mb-4" />
-                      <h4 className="font-semibold text-lg mb-3">Crea E-Farmacia</h4>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Generamos un sitio web completo para tu farmacia con integración total a MediLink
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="pharmacy-name">Nombre de la farmacia</Label>
-                      <Input
-                        id="pharmacy-name"
-                        placeholder="Ej: Farmacia San Juan"
-                        value={pharmacyData.name}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, name: e.target.value })}
+                  {orderConfirmed && (
+                    <div className="mt-8 pt-8 border-t border-border">
+                      <div className="text-center mb-6">
+                        <h3 className="text-lg font-semibold mb-2">¿Te interesa MediLink?</h3>
+                        <p className="text-muted-foreground">
+                          Únete a nuestra lista de espera para ser de los primeros en acceder
+                        </p>
+                      </div>
+                      <iframe
+                        data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+                        loading="lazy"
+                        width="100%"
+                        height="930"
+                        frameBorder="0"
+                        marginHeight="0"
+                        marginWidth="0"
+                        title="Sumate al waitlist!"
+                        className="rounded-lg"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="pharmacy-address">Dirección completa</Label>
-                      <Input
-                        id="pharmacy-address"
-                        placeholder="Av. Corrientes 1234, CABA"
-                        value={pharmacyData.address}
-                        onChange={(e) => setPharmacyData({ ...pharmacyData, address: e.target.value })}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="pharmacy-phone">Teléfono</Label>
-                        <Input
-                          id="pharmacy-phone"
-                          placeholder="+54 11 1234-5678"
-                          value={pharmacyData.phone}
-                          onChange={(e) => setPharmacyData({ ...pharmacyData, phone: e.target.value })}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="pharmacy-email">Email</Label>
-                        <Input
-                          id="pharmacy-email"
-                          type="email"
-                          placeholder="farmacia@email.com"
-                          value={pharmacyData.email}
-                          onChange={(e) => setPharmacyData({ ...pharmacyData, email: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="pharmacy-license">Matrícula farmacia</Label>
-                        <Input
-                          id="pharmacy-license"
-                          placeholder="12345"
-                          value={pharmacyData.license}
-                          onChange={(e) => setPharmacyData({ ...pharmacyData, license: e.target.value })}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="pharmacist-name">Farmacéutico responsable</Label>
-                        <Input
-                          id="pharmacist-name"
-                          placeholder="Dr. Juan Pérez"
-                          value={pharmacyData.pharmacist}
-                          onChange={(e) => setPharmacyData({ ...pharmacyData, pharmacist: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button className="w-full" onClick={() => setPharmacyStep(2)}>
-                    Continuar <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {pharmacyStep === 2 && (
-              <Card className="p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Configura tu inventario</CardTitle>
-                  <CardDescription>Sincroniza tu stock actual con la plataforma MediLink</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="p-4 border-2 border-dashed border-secondary/20 rounded-lg bg-secondary/5 text-center">
-                    <Package className="w-12 h-12 text-secondary mx-auto mb-4" />
-                    <h4 className="font-semibold mb-2">Importar inventario existente</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Conecta con tu sistema actual o importa desde archivo CSV
-                    </p>
-                    <div className="space-y-2">
-                      <Button variant="outline" className="w-full bg-transparent">
-                        <FileText className="w-4 h-4 mr-2" /> Importar desde CSV
-                      </Button>
-                      <Button variant="outline" className="w-full bg-transparent">
-                        <Zap className="w-4 h-4 mr-2" /> Conectar sistema existente
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Vista previa del inventario:</h4>
-                    {sampleInventory.map((item, index) => (
-                      <div key={index} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-medium">{item.medication}</h5>
-                          <Badge
-                            variant={
-                              item.status === "good" ? "default" : item.status === "low" ? "secondary" : "destructive"
-                            }
-                            className="text-xs"
-                          >
-                            {item.status === "good"
-                              ? "Stock OK"
-                              : item.status === "low"
-                                ? "Stock Bajo"
-                                : "Stock Crítico"}
-                          </Badge>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 text-sm text-muted-foreground">
-                          <span>Stock: {item.stock} unidades</span>
-                          <span>Mínimo: {item.minStock}</span>
-                          <span>Precio: ${item.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setPharmacyStep(1)} className="flex-1">
-                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
-                    </Button>
-                    <Button className="flex-1" onClick={() => setPharmacyStep(3)}>
-                      Continuar <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {pharmacyStep === 3 && (
-              <Card className="p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Vista semanal de pedidos</CardTitle>
-                  <CardDescription>Gestiona todos los pedidos de la semana con control de estado</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="space-y-1">
-                      <Label htmlFor="week-selector">Semana seleccionada:</Label>
-                      <select
-                        id="week-selector"
-                        className="px-3 py-2 border rounded-md bg-background"
-                        value={selectedWeek}
-                        onChange={(e) => setSelectedWeek(e.target.value)}
-                      >
-                        <option value="2024-01-15">15-21 Enero 2024</option>
-                        <option value="2024-01-08">8-14 Enero 2024</option>
-                        <option value="2024-01-22">22-28 Enero 2024</option>
-                      </select>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-secondary">5</div>
-                      <div className="text-sm text-muted-foreground">Pedidos esta semana</div>
-                    </div>
-                  </div>
-
-                  {/* Weekly Orders Table */}
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-7 gap-2 text-xs font-medium text-muted-foreground border-b pb-2">
-                      <span>Pedido</span>
-                      <span>Paciente</span>
-                      <span>Validado</span>
-                      <span>Pagado</span>
-                      <span>Retiro</span>
-                      <span>Estado</span>
-                      <span>Acciones</span>
-                    </div>
-
-                    {sampleWeeklyOrders.map((order) => (
-                      <div
-                        key={order.id}
-                        className={`grid grid-cols-7 gap-2 items-center p-3 ${getStatusBorderColor(orderStatuses[order.id] || order.status)} border-2 rounded-lg bg-muted/10 hover:bg-muted/20`}
-                      >
-                        <div className="text-sm font-medium">{order.id}</div>
-                        <div className="text-sm">
-                          <div className="font-medium">{order.patient}</div>
-                          <div className="text-xs text-muted-foreground">{order.medication}</div>
-                        </div>
-                        <div className="text-center">
-                          {order.validatedOnline ? (
-                            <CheckCircle className="w-4 h-4 text-secondary mx-auto" />
-                          ) : (
-                            <X className="w-4 h-4 text-muted-foreground mx-auto" />
-                          )}
-                        </div>
-                        <div className="text-center">
-                          {order.paidOnline ? (
-                            <CheckCircle className="w-4 h-4 text-primary mx-auto" />
-                          ) : (
-                            <X className="w-4 h-4 text-muted-foreground mx-auto" />
-                          )}
-                        </div>
-                        <div className="text-xs">
-                          <div>
-                            {order.pickupDate.split("-")[2]}/{order.pickupDate.split("-")[1]}
-                          </div>
-                          <div className="text-muted-foreground">{order.pickupTime}</div>
-                        </div>
-                        <div>
-                          <select
-                            className="text-xs px-2 py-1 border rounded bg-background"
-                            value={orderStatuses[order.id] || order.status}
-                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                          >
-                            <option value="validating">Validando</option>
-                            <option value="stock">Buscando stock</option>
-                            <option value="ready">Listo para retiro</option>
-                            <option value="completed">Completado</option>
-                          </select>
-                        </div>
-                        <div>
-                          
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Status Legend */}
-                  <div className="p-4 bg-muted/30 rounded-lg">
-                    <h4 className="font-semibold mb-3 text-sm">Estados de pedidos:</h4>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <span>Validando: Esperando validación farmacéutica</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                        <span>Buscando stock: Verificando disponibilidad</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-secondary rounded-full"></div>
-                        <span>Listo para retiro: Medicamento preparado</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-primary rounded-full"></div>
-                        <span>Completado: Pedido entregado</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setPharmacyStep(2)} className="flex-1">
-                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
-                    </Button>
-                    <Button className="flex-1" onClick={() => setPharmacyStep(4)}>
-                      Ver Validación <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {pharmacyStep === 4 && (
-              <Card className="p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Validación de recetas</CardTitle>
-                  <CardDescription>
-                    Proceso de validación profesional para garantizar cumplimiento regulatorio
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="p-4 border-l-4 border-secondary bg-secondary/5">
-                    <h4 className="font-semibold mb-2 flex items-center">
-                      <Stethoscope className="w-4 h-4 mr-2 text-secondary" />
-                      Receta pendiente de validación
-                    </h4>
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="font-medium">Paciente:</span> María González
-                        </div>
-                        <div>
-                          <span className="font-medium">Obra Social:</span> OSDE
-                        </div>
-                        <div>
-                          <span className="font-medium">Médico:</span> Dr. García
-                        </div>
-                        <div>
-                          <span className="font-medium">Fecha:</span> 15/01/2024
-                        </div>
-                      </div>
-                      <div className="p-3 bg-white border rounded">
-                        <h5 className="font-medium mb-1">Medicamento prescrito:</h5>
-                        <p className="text-sm">Atorvastatina 20mg </p>
-                        <p className="text-xs text-muted-foreground mt-1">Cantidad: 30 comprimidos</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Verificaciones automáticas:</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-secondary" />
-                        <span className="text-sm">Receta válida y vigente</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-secondary" />
-                        <span className="text-sm">Médico matriculado verificado</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-secondary" />
-                        <span className="text-sm">Cobertura OSDE confirmada</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-secondary" />
-                        <span className="text-sm">Stock disponible: 45 unidades</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                    <h4 className="font-semibold mb-2 text-primary">Decisión del farmacéutico:</h4>
-                    <div className="flex space-x-2">
-                      <Button className="flex-1" onClick={() => setPharmacyStep(5)}>
-                        <CheckCircle className="w-4 h-4 mr-2" /> Aprobar Dispensación
-                      </Button>
-                      <Button variant="outline" className="flex-1 bg-transparent">
-                        Rechazar
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={() => setPharmacyStep(3)} className="flex-1">
-                      <ArrowLeft className="w-4 h-4 mr-2" /> Atrás
-                    </Button>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -1574,6 +1181,24 @@ export default function MediLinkLanding() {
                     <Button className="flex-1" onClick={() => setPharmacyStep(1)}>
                       Reiniciar Demo
                     </Button>
+                  </div>
+
+                  <div className="mt-8 pt-8 border-t border-border">
+                    <div className="text-center mb-6">
+                      <h3 className="text-lg font-semibold mb-2">¿Quieres integrar MediLink en tu farmacia?</h3>
+                      <p className="text-muted-foreground">Únete a nuestra lista de espera para acceso prioritario</p>
+                    </div>
+                    <iframe
+                      data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+                      loading="lazy"
+                      width="100%"
+                      height="930"
+                      frameBorder="0"
+                      marginHeight="0"
+                      marginWidth="0"
+                      title="Sumate al waitlist!"
+                      className="rounded-lg"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -2253,9 +1878,31 @@ export default function MediLinkLanding() {
         </div>
       </section>
 
-      {/* Footer */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Únete a la revolución farmacéutica</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Sé parte de los primeros en experimentar el futuro del acceso a medicamentos en Argentina
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <iframe
+              data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+              loading="lazy"
+              width="100%"
+              height="930"
+              frameBorder="0"
+              marginHeight="0"
+              marginWidth="0"
+              title="Sumate al waitlist!"
+              className="rounded-lg shadow-lg"
+            />
+          </div>
+        </div>
+      </section>
+
       <footer id="contacto" className="py-16 bg-card border-t border-border">
-    
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -2309,7 +1956,6 @@ export default function MediLinkLanding() {
                 </li>
               </ul>
             </div>
-            
           </div>
           <div className="border-t border-border mt-12 pt-8 text-center">
             <p className="text-muted-foreground">
