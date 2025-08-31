@@ -1161,9 +1161,7 @@ export default function MediLinkLanding() {
                       <p className="text-sm text-muted-foreground mb-4">
                         Generamos un sitio web completo para tu farmacia con integración total a MediLink
                       </p>
-                      <Badge variant="default" className="text-xs">
-                        Sitio web + Plugin incluido
-                      </Badge>
+                     
                     </div>
                   </div>
 
