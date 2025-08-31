@@ -1465,7 +1465,7 @@ export default function MediLinkLanding() {
                       </div>
                       <div className="p-3 bg-white border rounded">
                         <h5 className="font-medium mb-1">Medicamento prescrito:</h5>
-                        <p className="text-sm">Atorvastatina 20mg - 1 comprimido por día</p>
+                        <p className="text-sm">Atorvastatina 20mg </p>
                         <p className="text-xs text-muted-foreground mt-1">Cantidad: 30 comprimidos</p>
                       </div>
                     </div>
