@@ -1393,9 +1393,7 @@ export default function MediLinkLanding() {
                           </select>
                         </div>
                         <div>
-                          <Button size="sm" variant="outline" className="text-xs px-2 py-1 h-auto bg-transparent">
-                            <Eye className="w-3 h-3" />
-                          </Button>
+                          
                         </div>
                       </div>
                     ))}
