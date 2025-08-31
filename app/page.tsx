@@ -277,6 +277,21 @@ export default function MediLinkLanding() {
     }))
   }
 
+  const getStatusBorderColor = (status: string) => {
+    switch (status) {
+      case "validating":
+        return "border-yellow-500"
+      case "stock":
+        return "border-orange-500"
+      case "ready":
+        return "border-secondary"
+      case "completed":
+        return "border-primary"
+      default:
+        return "border"
+    }
+  }
+
   if (demoMode === "caregiver-demo") {
     return (
       <div className="min-h-screen bg-background">
@@ -1161,7 +1176,6 @@ export default function MediLinkLanding() {
                       <p className="text-sm text-muted-foreground mb-4">
                         Generamos un sitio web completo para tu farmacia con integración total a MediLink
                       </p>
-                     
                     </div>
                   </div>
 
@@ -1339,7 +1353,7 @@ export default function MediLinkLanding() {
                     {sampleWeeklyOrders.map((order) => (
                       <div
                         key={order.id}
-                        className="grid grid-cols-7 gap-2 items-center p-3 border rounded-lg bg-muted/10 hover:bg-muted/20"
+                        className={`grid grid-cols-7 gap-2 items-center p-3 ${getStatusBorderColor(orderStatuses[order.id] || order.status)} border-2 rounded-lg bg-muted/10 hover:bg-muted/20`}
                       >
                         <div className="text-sm font-medium">{order.id}</div>
                         <div className="text-sm">
