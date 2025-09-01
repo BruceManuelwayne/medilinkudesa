@@ -1737,7 +1737,7 @@ export default function MediLinkLanding() {
               <span className="text-secondary">farmacias</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
-              La primera plataforma digital en Argentina que facilita el acceso seguro a medicamentos recetados bajo
+              La primera plataforma digital que facilita el acceso seguro a medicamentos recetados bajo
               supervisión profesional
             </p>
 
@@ -2002,7 +2002,7 @@ export default function MediLinkLanding() {
                     </h3>
                     <p className="text-lg text-muted-foreground mb-6">
                       Cada entrega es coordinada por un farmacéutico matriculado que garantiza el cumplimiento de todas
-                      las normativas argentinas para medicamentos recetados.
+                      las normativas para medicamentos recetados.
                     </p>
                     <div className="space-y-4">
                       <div className="flex items-start space-x-3">
@@ -2358,7 +2358,7 @@ export default function MediLinkLanding() {
           <div className="text-center mb-8">
            
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Sé parte de los primeros en experimentar el futuro del acceso a medicamentos en Argentina
+              Sé parte de los primeros en experimentar el futuro del acceso a medicamentos 
             </p>
           </div>
           <div className="max-w-4xl mx-auto">
