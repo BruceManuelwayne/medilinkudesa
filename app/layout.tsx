@@ -6,7 +6,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "MediLink - Plataforma Digital de Farmacias",
-  description: "Conectamos pacientes con farmacias para el acceso seguro a medicamentos recetados en Argentina",
+  description: "Conectamos personas con farmacias para el acceso seguro a medicamentos recetados en Argentina",
   generator: "v0.app",
 }
 

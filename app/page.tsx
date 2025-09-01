@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import ContactUs from "@/components/conact";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   CheckCircle,
@@ -1104,19 +1105,9 @@ export default function MediLinkLanding() {
                           Únete a nuestra lista de espera para ser de los primeros en acceder
                         </p>
                       </div>
-                      <iframe
-                        data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-                        loading="lazy"
-                        width="100%"
-                        height="930"
-                        frameBorder="0"
-                        marginHeight="0"
-                        marginWidth="0"
-                        title="Sumate al waitlist!"
-                        className="rounded-lg"
-                      />
                     </div>
                   )}
+                  <ContactUs />
                 </CardContent>
               </Card>
             )}
@@ -1188,21 +1179,13 @@ export default function MediLinkLanding() {
                       <h3 className="text-lg font-semibold mb-2">¿Quieres integrar MediLink en tu farmacia?</h3>
                       <p className="text-muted-foreground">Únete a nuestra lista de espera para acceso prioritario</p>
                     </div>
-                    <iframe
-                      data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-                      loading="lazy"
-                      width="100%"
-                      height="930"
-                      frameBorder="0"
-                      marginHeight="0"
-                      marginWidth="0"
-                      title="Sumate al waitlist!"
-                      className="rounded-lg"
-                    />
+              
                   </div>
+                  
                 </CardContent>
               </Card>
             )}
+                    <ContactUs />
           </div>
         </div>
       </div>
@@ -1473,7 +1456,7 @@ export default function MediLinkLanding() {
                         <div>
                           <h4 className="font-semibold text-foreground">Geolocalización Precisa</h4>
                           <p className="text-muted-foreground">
-                            Encuentra farmacias en un radio de hasta 10km de tu ubicación
+                            De la ubicación que solicites
                           </p>
                         </div>
                       </div>
@@ -1757,10 +1740,7 @@ export default function MediLinkLanding() {
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                       Mantén el control profesional en cada dispensación
                     </h3>
-                    <p className="text-lg text-muted-foreground mb-6">
-                      Nuestra plataforma garantiza que cada medicamento dispensado cumple con la Ley 16.463 y mantiene
-                      la trazabilidad completa requerida por ANMAT.
-                    </p>
+                   
                     <div className="space-y-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mt-1">
@@ -1818,18 +1798,12 @@ export default function MediLinkLanding() {
             <Badge className="bg-secondary text-secondary-foreground mb-4">Cumplimiento Regulatorio</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Seguridad y Confianza Garantizada</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Cumplimos estrictamente con la normativa argentina para medicamentos recetados
+              Cumplimos estrictamente con las normativas locales para medicamentos recetados
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-secondary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">Ley 16.463</h3>
-              <p className="text-sm text-muted-foreground">Cumplimiento total con la normativa de medicamentos</p>
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+           
             <div className="text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Stethoscope className="w-8 h-8 text-primary" />
@@ -1837,13 +1811,7 @@ export default function MediLinkLanding() {
               <h3 className="font-semibold text-foreground mb-2">Supervisión Profesional</h3>
               <p className="text-sm text-muted-foreground">Farmacéutico en cada dispensación</p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-accent-foreground" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">ANMAT Aprobado</h3>
-              <p className="text-sm text-muted-foreground">Disposición 4980/2005 cumplida</p>
-            </div>
+           
             <div className="text-center">
               <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="w-8 h-8 text-secondary" />
@@ -1858,9 +1826,9 @@ export default function MediLinkLanding() {
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Listo para revolucionar el acceso a medicamentos?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Estamos listos para revolucionar el acceso a medicamentos, ¿nos acompañas?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Únete a la plataforma que está transformando la experiencia farmacéutica en Argentina
+            Únete a la plataforma que está transformando la experiencia farmacéutica 
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8" onClick={startPharmacyDemo}>
@@ -1881,23 +1849,13 @@ export default function MediLinkLanding() {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Únete a la revolución farmacéutica</h2>
+           
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Sé parte de los primeros en experimentar el futuro del acceso a medicamentos en Argentina
             </p>
           </div>
           <div className="max-w-4xl mx-auto">
-            <iframe
-              data-tally-src="https://tally.so/embed/m6gpKO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-              loading="lazy"
-              width="100%"
-              height="930"
-              frameBorder="0"
-              marginHeight="0"
-              marginWidth="0"
-              title="Sumate al waitlist!"
-              className="rounded-lg shadow-lg"
-            />
+                   <ContactUs />
           </div>
         </div>
       </section>
@@ -1913,15 +1871,15 @@ export default function MediLinkLanding() {
                 <span className="text-xl font-bold text-foreground">MediLink</span>
               </div>
               <p className="text-muted-foreground mb-4">
-                Conectando pacientes con farmacias para un acceso seguro a medicamentos en Argentina.
-              </p>
+                Conectando pacientes con farmacias para un acceso seguro a medicamentos.
+                </p>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-4">Producto</h4>
               <ul className="space-y-2">
                 <li>
                   <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                    Para Pacientes
+                    Para Vos
                   </a>
                 </li>
                 <li>
@@ -1959,7 +1917,7 @@ export default function MediLinkLanding() {
           </div>
           <div className="border-t border-border mt-12 pt-8 text-center">
             <p className="text-muted-foreground">
-              © 2024 MediLink. Todos los derechos reservados. Plataforma regulada bajo normativa ANMAT.
+              © 2024 MediLink. Todos los derechos reservados.
             </p>
           </div>
         </div>
